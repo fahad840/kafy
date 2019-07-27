@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "1005232388379",
+    "firebase_url": "https://kafyapp-5e3b3.firebaseio.com",
+    "project_id": "kafyapp-5e3b3",
+    "storage_bucket": "kafyapp-5e3b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005232388379:android:63c37bdb0be5c55b",
+        "android_client_info": {
+          "package_name": "com.zadip.kafy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005232388379-ssfgoqssnp12t0pv4usdc4k0ohsas5gj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zadip.kafy",
+            "certificate_hash": "a987d0cc1b021d0239aadce7a79f81571b5f5b35"
+          }
+        },
+        {
+          "client_id": "1005232388379-l0cumj481sv0basldgdegg2ftkd5fo5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANMDuMcMYJREXll83XFthCN2a2ozMUlRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005232388379-l0cumj481sv0basldgdegg2ftkd5fo5o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1005232388379-mk9gt1d28j0b4o66h6ajlnh7kvftm72g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zadip.medappdoc"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005232388379:android:240e679a66e4a339",
+        "android_client_info": {
+          "package_name": "com.zadip.kafydoctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005232388379-l0cumj481sv0basldgdegg2ftkd5fo5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANMDuMcMYJREXll83XFthCN2a2ozMUlRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005232388379-l0cumj481sv0basldgdegg2ftkd5fo5o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1005232388379-mk9gt1d28j0b4o66h6ajlnh7kvftm72g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zadip.medappdoc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

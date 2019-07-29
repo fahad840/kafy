@@ -284,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                                     icon: Icon(Icons.arrow_right),
                                     color: Colors.green,
                                     onPressed: () {
-                                      loginMobile(context, textController.text);
+                                      loginMobile(context, replaceArabicNumber(textController.text));
                                     }),
                                 suffixStyle:
                                     const TextStyle(color: Colors.green)),
@@ -502,6 +502,16 @@ class _LoginPageState extends State<LoginPage> {
 //       }
 //     });
 //   }
+String replaceArabicNumber(String input) {
+  const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const farsi = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+  for (int i = 0; i < farsi.length; i++) {
+    input = input.replaceAll(farsi[i], english[i]);
+  }
+
+  return input;
+}
 
 _getUser(context) async {
   prefs = await SharedPreferences.getInstance();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,15 +8,20 @@ import 'dto/doctor.dart';
 import 'utility.dart';
 import 'review.dart';
 import 'localization/app_translations.dart';
+import 'package:location/location.dart';
+
 
 class currentLocation extends StatefulWidget {
   var booking;
   Doctor doctor;
+
   currentLocation({Key key, @required this.doctor, this.booking}) : super(key: key);
 
   @override
   currentLoctaionState createState() {
+
     return new currentLoctaionState();
+
   }
 }
 
@@ -23,6 +29,9 @@ class currentLoctaionState extends State<currentLocation> {
   Completer<GoogleMapController> _controller = Completer();
   GoogleMapController _mapController;
   String result;
+  var currentlocation = LocationData;
+
+  var location = new Location();
   static final CameraPosition mylocation = CameraPosition(
     target: LatLng(24.713552, 46.675297),
     zoom: 14.4746,
@@ -37,6 +46,7 @@ class currentLoctaionState extends State<currentLocation> {
     print(widget.doctor.name);
     DOCTOR=widget.doctor;
     BOOKING=widget.booking;
+    _currentLocation();
     super.initState();
   }
 
@@ -54,9 +64,10 @@ class currentLoctaionState extends State<currentLocation> {
     setState(() {
       // adding a new marker to map
       markers[markerId] = marker;
+
+
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -68,8 +79,6 @@ class currentLoctaionState extends State<currentLocation> {
             onPressed: () {
               print(result);
               CUSTOMER.latLng = result;
-
-
               Route route = MaterialPageRoute(
                   builder: (context) => Review());
               Navigator.push(context, route);
@@ -97,28 +106,30 @@ class currentLoctaionState extends State<currentLocation> {
     );
   }
 
+
 //  Future<void> _goToTheLake() async {
 //    final GoogleMapController controller = await _controller.future;
 //    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
 //  }
 
-//  void _currentLocation() async {
-//    final GoogleMapController controller = await _controller.future;
-//    LocationData currentLocation;
-//    var location = new Location();
-//    try {
-//      currentLocation = await location.getLocation();
-//    } on Exception {
-//      currentLocation = null;
-//    }
-//
-//    controller.animateCamera(CameraUpdate.newCameraPosition(
-//      CameraPosition(
-//        bearing: 0,
-//        target: LatLng(currentLocation.latitude, currentLocation.longitude),
-//        zoom: 17.0,
-//      ),
-//    ));
+  void _currentLocation() async {
+    final GoogleMapController controller = await _controller.future;
+    LocationData currentLocation;
+    var location = new Location();
+    try {
+      currentLocation = await location.getLocation();
+    } on Exception {
+      currentLocation = null;
+    }
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 17.0,
+      ),
+    ));
+  }
 
   void _onMapLongTapped(LatLng location) {
     print('tapped');

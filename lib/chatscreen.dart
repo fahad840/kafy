@@ -390,8 +390,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                             child: Hero(
                                                 tag: 'hero1',
                                                 child: Container(
-                                                  height: 250.0,
-                                                  width: 250.0,
+                                                  height: 120.0,
+                                                  width: 120.0,
                                                   color: Colors.white,
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -431,7 +431,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                 .pop();
                                                           },
                                                           child: Text(
-                                                              AppTranslations.of(context).text("Cancel"),
+                                                              AppTranslations.of(context).text("Cancel Request"),
                                                             style: TextStyle(
                                                                 color:
                                                                     Colors.red),

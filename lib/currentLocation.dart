@@ -88,21 +88,45 @@ class currentLoctaionState extends State<currentLocation> {
           ),
         ],
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: mylocation,
-        markers: Set<Marker>.of(markers.values),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        onTap: (LatLng pos) {
-          setState(() {
-            result = pos.latitude.toString() + "," + pos.longitude.toString();
-            _add(pos);
-          });
-        },
-        myLocationEnabled: true,
-      ),
+      body:Stack(
+        children: <Widget>[
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: mylocation,
+            markers: Set<Marker>.of(markers.values),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            onTap: (LatLng pos) {
+              setState(() {
+                result = pos.latitude.toString() + "," + pos.longitude.toString();
+                _add(pos);
+              });
+            },
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+
+          ),
+          Align(
+            alignment: FractionalOffset.bottomRight,
+            child: IconButton(
+              iconSize: 35,
+              padding: EdgeInsets.only(right: 20,bottom: 35),
+                        icon: Icon(Icons.my_location),
+                        onPressed: () async {
+                          _currentLocation();
+                        }
+                    )
+
+            ,
+          )
+
+        ],
+
+      )
+
+
+
     );
   }
 

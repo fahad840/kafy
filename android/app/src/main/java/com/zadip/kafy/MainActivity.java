@@ -26,8 +26,8 @@ public class MainActivity extends FlutterActivity {
                         flutterResult = result;
                         if (call.method.equals("getLocation")) {
 //                           result.success("from native");
-                            Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                            startActivityForResult(intent, 1);
+//                            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+//                            startActivityForResult(intent, 1);
                         } else {
                             result.notImplemented();
                         }

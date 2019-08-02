@@ -25,6 +25,8 @@
   "email": "Email",
   "verify": "Verify",
   "name": "Name",
+  "age": "Age",
+
   "user_exists": "user_exists",
   "invalid_otp": "invalid otp",
   "review": "Review",

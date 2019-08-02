@@ -22,13 +22,12 @@ dependencies:
   shared_preferences: ^0.4.3
   http: ^0.12.0
   connectivity: ^0.3.2
-  image_picker: ^0.6.0
-  firebase_database: ^3.0.0
-  audioplayers: ^0.7.8
-  cached_network_image: ^0.5.1
+  image_picker: ^0.6.1
+  firebase_database: ^3.0.5
+  audioplayers: ^0.13.1
+  cached_network_image: ^1.1.1
   flutter_range_slider: ^1.0.1
-  geocoder: 
-  flutter_facebook_login: ^1.1.1
+  geocoder:
   url_launcher: ^5.0.2
   smooth_star_rating: ^1.0.1
   google_maps_flutter: ^0.5.13

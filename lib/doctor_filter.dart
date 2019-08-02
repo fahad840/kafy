@@ -4,7 +4,7 @@ import 'package:kafy/dto/filterparam.dart';
 import 'package:kafy/localization.dart';
 import 'package:kafy/utility.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_range_slider/flutter_range_slider.dart';
+import 'package:flutter_range_slider/flutter_range_slider.dart' as RangSlider;
 import 'localization/app_translations.dart';
 
 // import 'package:kafy/utility/customslider.dart';
@@ -113,7 +113,7 @@ class AddEntryDialogState extends State<AddEntryDialog> {
               "${AppTranslations.of(context).text("cost")} ${widget.filterData.minCost} - ${widget.filterData.maxCost} SAR"),
           Padding(
             padding: EdgeInsets.all(20.0),
-            child: new RangeSlider(
+            child: new RangSlider.RangeSlider(
               min: widget.filterParam.minCost.toDouble(),
               max: widget.filterParam.maxCost.toDouble(),
               lowerValue: widget.filterData.minCost.toDouble(),

@@ -18,7 +18,7 @@ import 'package:flutter/services.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'localization/app_translations_delegate.dart';
 //import 'package:map_view/map_view.dart';
 import 'localization/application.dart';
@@ -318,7 +318,7 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: EdgeInsets.all(15.0),
                                 color: color_fb,
                                 onPressed: () {
-                                  _fbLogin();
+                                 // _fbLogin();
                                 },
                                 child: Row(
                                   children: <Widget>[
@@ -375,31 +375,31 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _fbLogin() async {
-    var facebookLogin = new FacebookLogin();
-    var result = await facebookLogin.logInWithReadPermissions(['email']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        print(result.accessToken.token);
-        httpGet('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${result.accessToken.token}')
-            .then((graphRes) {
-          var profile = json.decode(graphRes);
-          _customer.email = profile['email'];
-          _customer.name = profile['name'];
-          checkEmail();
-        });
-
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        // _showCancelledMessage();
-        break;
-      case FacebookLoginStatus.error:
-        print(result.errorMessage);
-        // _showErrorOnUI(result.errorMessage);
-        break;
-    }
-  }
+//  _fbLogin() async {
+//    var facebookLogin = new FacebookLogin();
+//    var result = await facebookLogin.logInWithReadPermissions(['email']);
+//
+//    switch (result.status) {
+//      case FacebookLoginStatus.loggedIn:
+//        print(result.accessToken.token);
+//        httpGet('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${result.accessToken.token}')
+//            .then((graphRes) {
+//          var profile = json.decode(graphRes);
+//          _customer.email = profile['email'];
+//          _customer.name = profile['name'];
+//          checkEmail();
+//        });
+//
+//        break;
+//      case FacebookLoginStatus.cancelledByUser:
+//        // _showCancelledMessage();
+//        break;
+//      case FacebookLoginStatus.error:
+//        print(result.errorMessage);
+//        // _showErrorOnUI(result.errorMessage);
+//        break;
+//    }
+//  }
 
   void checkEmail() {
     setState(() {

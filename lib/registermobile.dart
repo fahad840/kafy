@@ -28,7 +28,17 @@ class RegisterState extends State<RegisterMobilePage> {
   final GlobalKey<ScaffoldState> _scaffoldState =
       new GlobalKey<ScaffoldState>();
   bool _isLoading = false;
+  var _locations = [];
+  int _radioValue1 = -1;
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _getCities();
+  }
   @override
   Widget build(BuildContext context) {
     var textController = new TextEditingController(text: widget.customer.phone);
@@ -84,8 +94,28 @@ class RegisterState extends State<RegisterMobilePage> {
       ),
     );
   }
+  void _handleRadioValueChange1(int value) {
+    setState(() {
+      _radioValue1 = value;
+
+      switch (_radioValue1) {
+        case 0:
+//          _scaffoldState.currentState
+//              .showSnackBar(SnackBar(content: Text("Male")));
+          widget.customer.gender = "Male";
+          break;
+        case 1:
+//          _scaffoldState.currentState
+//              .showSnackBar(SnackBar(content: Text("Female")));
+          widget.customer.gender = "Female";
+          break;
+      }
+    });
+  }
 
   Widget formUI() {
+    var textController = new TextEditingController();
+
     return new Column(
       children: <Widget>[
         TextFormField(
@@ -111,6 +141,70 @@ class RegisterState extends State<RegisterMobilePage> {
             _checkuser(val);
           },
         ),
+
+        Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: widget.customer.city,
+            hint:
+            Text(AppTranslations.of(context).text("location")),
+            items: _locations.map((var value) {
+              return new DropdownMenuItem<String>(
+                value: value['name_en'],
+                child: new Text(value['name_en']),
+              );
+            }).toList(),
+            onChanged: (String val) {
+              setState(() {
+                widget.customer.city = val;
+              });
+
+              print(val);
+            },
+          ),
+        ),
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            new Radio(
+              value: 0,
+              groupValue: _radioValue1,
+              activeColor: primaryColor,
+              onChanged: _handleRadioValueChange1,
+            ),
+            new Text(
+              'Male',
+              style: new TextStyle(fontSize: 16.0),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20),
+            ),
+            new Radio(
+              value: 1,
+              activeColor: primaryColor,
+              groupValue: _radioValue1,
+              onChanged: _handleRadioValueChange1,
+            ),
+            new Text(
+              'Female',
+              style: new TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
+
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: AppTranslations.of(context).text("age")),
+          keyboardType: TextInputType.number,
+          onSaved: (String val) {
+            widget.customer.age=val;
+          },
+        ),
+
+
         SizedBox(
           height: 10.0,
         ),
@@ -136,6 +230,36 @@ class RegisterState extends State<RegisterMobilePage> {
         )
       ],
     );
+  }
+
+  _getCities() {
+    setState(() {
+      _isLoading = true;
+    });
+    httpGet(SERVERURL + "doctors/cities").then((res) async {
+      setState(() {
+        _isLoading = false;
+      });
+      print("getCities " + res.toString());
+
+      var resJson = json.decode(res);
+      if (resJson['result'] == 1) {
+        // success
+        setState(() {
+          _locations = resJson['cities'];
+        });
+      } else {
+        //       failed
+        _scaffoldState.currentState.showSnackBar(SnackBar(
+            backgroundColor: Colors.red, content: Text(resJson['message'])));
+      }
+    }).catchError((error) {
+//    connection error
+      print("_getCities error " + error.toString());
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   void _validateInputs() {

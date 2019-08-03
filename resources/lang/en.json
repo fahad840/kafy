@@ -61,6 +61,8 @@
   "Confirmation":"Confirmation",
   "enter_reason":"Enter Reason to cancel this request.",
   "enter_reason_here":"Enter reason here..",
+  "cancel_success":"Request cancel successfully.",
+
   "Submit":"Submit",
   "Cancel":"Cancel",
   "Cancel Request":"Cancel Request",

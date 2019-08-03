@@ -59,6 +59,8 @@
   "visit_on":"سوف يزور يوم",
   "Confirmation":"التأكيد",
   "enter_reason":"أدخل السبب لإلغاء هذا الطلب.",
+  "cancel_success":"طلب الإلغاء بنجاح.",
+
   "enter_reason_here":"أدخل السبب هنا..",
   "Submit":"استمرار",
   "Cancel":"الغاء",

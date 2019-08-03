@@ -337,10 +337,13 @@ class BookingState extends State<BookingPage> {
       print(res);
       if (resJson['result'] == 1) {
 
-//        scaffoldState.currentState.showSnackBar(
-//            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
+        Navigator.of(context).pop();
+        SnackBar(
+            backgroundColor: Colors.green,
+            content:
+            Text(AppTranslations.of(context).text("cancel_success")));
 
-//        getBookings();
+        getBookings();
       } else {
         //verification failed
 //        SnackBar(backgroundColor: Colors.red, content: Text("Error"));

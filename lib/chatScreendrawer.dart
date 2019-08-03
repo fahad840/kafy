@@ -386,8 +386,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Hero(
-                        tag: "hero1",
+                      Container(
                         child: ClipOval(
                           child: FloatingActionButton(
                               child: Icon(Icons.arrow_forward),
@@ -398,13 +397,13 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                     HeroDialogRoute(
                                         builder: (BuildContext context) => Center(
                                           child: AlertDialog(
-                                            contentPadding: EdgeInsets.all(0.0),
+                                            contentPadding: EdgeInsets.all(10.0),
                                             content: Container(
                                               child: Hero(
                                                   tag: 'hero1',
                                                   child: Container(
-                                                    height: 150.0,
-                                                    width: 150.0,
+                                                    height: 120.0,
+                                                    width: 120.0,
                                                     color: Colors.white,
                                                     child: Column(
                                                       mainAxisAlignment:

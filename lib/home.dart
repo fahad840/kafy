@@ -56,6 +56,7 @@ class _HomeState extends State<Home> {
     });
     _getUser();
 
+
 //    _getLocation();
   }
 

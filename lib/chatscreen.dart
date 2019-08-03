@@ -373,8 +373,7 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Hero(
-                  tag: "hero1",
+                Container(
                   child: ClipOval(
                     child: FloatingActionButton(
                         child: Icon(Icons.arrow_forward),

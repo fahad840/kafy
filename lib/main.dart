@@ -82,7 +82,7 @@ class MyAppState extends State<MyApp> {
       title: 'Kafy',
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         if (this.locale == null) {
-          this.locale = deviceLocale;
+           this.locale = Locale('ar');
           print(deviceLocale);
         }
         return this.locale;
@@ -135,6 +135,9 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement initState
     super.initState();
 //    firebaseCloudMessaging_Listeners();
+
+
+
     try {
       _googleSignIn.signOut();
     } catch (e) {}
@@ -142,9 +145,7 @@ class _LoginPageState extends State<LoginPage> {
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       print(account);
-      setState(() {
-        // _currentUser = account;
-      });
+
       // if (_currentUser != null) {
       //   _handleGetContact();
       // }

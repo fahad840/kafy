@@ -151,8 +151,10 @@ class RegisterState extends State<RegisterMobilePage> {
             Text(AppTranslations.of(context).text("location")),
             items: _locations.map((var value) {
               return new DropdownMenuItem<String>(
-                value: value['name_en'],
-                child: new Text(value['name_en']),
+                value:
+                LANG=="en"?
+                value['name_en']:value["name_ar"],
+                child: LANG=="en"?new Text(value['name_en']):new Text(value['name_ar']),
               );
             }).toList(),
             onChanged: (String val) {
@@ -174,7 +176,7 @@ class RegisterState extends State<RegisterMobilePage> {
               onChanged: _handleRadioValueChange1,
             ),
             new Text(
-              'Male',
+              AppTranslations.of(context).text("male"),
               style: new TextStyle(fontSize: 16.0),
             ),
             Padding(
@@ -187,7 +189,7 @@ class RegisterState extends State<RegisterMobilePage> {
               onChanged: _handleRadioValueChange1,
             ),
             new Text(
-              'Female',
+              AppTranslations.of(context).text("female"),
               style: new TextStyle(
                 fontSize: 16.0,
               ),

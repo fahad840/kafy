@@ -1,7 +1,7 @@
 {
   "app_name": "كافي",
-  "g_login": "الدخول مع حساب قوقل",
-  "fb_login": "الدخول مع حساب فيسبوك",
+  "g_login": "حساب قوقل",
+  "fb_login": "حساب فيسبوك",
   "mobile_number": "رقم الجوال",
   "connection_error": "نأسف توجد مشكلة في الاتصال",
   "select_category": "يرجى اختيار الفئة",
@@ -78,12 +78,6 @@
   "Rated":"تم التقييم",
   "valid_name":"أدخل اسم صالح",
   "valid_email":"أدخل بريد الكتروني صالح",
-
-
-  "service_cost":"Services and Cost"
-
-
-
-
+  "service_cost":"الخدمات والتكلفة"
 
 }

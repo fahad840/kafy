@@ -26,7 +26,7 @@ class Customer {
   String otp;
   String latLng;
   String deviceToken;
-  String city;
+  String location;
   String age;
 
   Customer(
@@ -41,7 +41,7 @@ class Customer {
       this.otp,
       this.latLng,
       this.deviceToken,
-      this.city,
+      this.location,
         this.age,
 
       });
@@ -58,7 +58,7 @@ class Customer {
       otp: json["otp"],
       latLng: json["latLng"],
       deviceToken: json["deviceToken"],
-      city: json["city"],
+      location: json["location"],
     age: json["age"]
 
   );
@@ -75,7 +75,7 @@ class Customer {
         "otp": otp,
         "latLng": latLng,
         "deviceToken": deviceToken,
-        "city": city,
-    "age":age
+        "location": location,
+        "age":age
       };
 }

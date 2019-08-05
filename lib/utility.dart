@@ -18,8 +18,8 @@ const mainFont = TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0);
 const sDisabledFont = TextStyle(fontSize: 13.0, color: disabledColor);
 
 var LANG = '';
-final String SERVERURL = "http://kafy.sa/kafy/webapi/";
-final String FILESURL = "http://kafy.sa/kafy/webapi/bookings/image/";
+final String SERVERURL = "http://192.168.1.130:8080/kafy/webapi/";
+final String FILESURL = "http://192.168.1.130:8080/webapi/bookings/image/";
 //final String SERVERURL = "http://192.168.43.101:8777/kafy/webap                                                                                                                                                                                                                                                                                                                                                                                                                                                                  i/";
 //final String FILESURL = "http://192.168.43.101:8777/static/";
 Customer CUSTOMER;
@@ -30,10 +30,12 @@ Future httpPost(String url, String data) async {
   print(data);
 
   var response = await http.post(url,
-      headers: {'Content-Type': 'application/json'}, body: data);
+      headers: {'Content-Type': 'application/json'} , body: data);
+
+
   if (response.statusCode == 200) {
 //    success
-    return response.body;
+    return utf8.decode(response.bodyBytes);
   } else {
 //    failed
     throw Exception('' + response.statusCode.toString());

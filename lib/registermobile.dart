@@ -146,7 +146,7 @@ class RegisterState extends State<RegisterMobilePage> {
           padding: EdgeInsets.only(top: 10, bottom: 10),
           child: DropdownButton<String>(
             isExpanded: true,
-            value: widget.customer.city,
+            value: widget.customer.location,
             hint:
             Text(AppTranslations.of(context).text("location")),
             items: _locations.map((var value) {
@@ -159,7 +159,7 @@ class RegisterState extends State<RegisterMobilePage> {
             }).toList(),
             onChanged: (String val) {
               setState(() {
-                widget.customer.city = val;
+                widget.customer.location = val;
               });
 
               print(val);

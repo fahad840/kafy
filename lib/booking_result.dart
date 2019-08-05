@@ -76,6 +76,8 @@ class BookingResultState extends State<BookingResult> {
                 Padding(padding: EdgeInsets.all(10.0)),
                 RaisedButton(
                   child: Text( AppTranslations.of(context).text("Done")),
+                  color: Colors.teal,
+
                   onPressed: ()
                   {
                     Navigator.of(context).pushAndRemoveUntil(

@@ -11,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kafy/register.dart';
 import 'package:kafy/registermobile.dart';
 import 'package:kafy/utility.dart';
+import 'package:kafy/landingPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
@@ -67,6 +68,7 @@ class MyAppState extends State<MyApp> {
   _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
   application.onLocaleChanged = onLocaleChange;
 
+
   super.initState();
   }
 
@@ -78,6 +80,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return new MaterialApp(
       title: 'Kafy',
       localeResolutionCallback: (deviceLocale, supportedLocales) {
@@ -102,7 +105,7 @@ class MyAppState extends State<MyApp> {
           : kDefaultTheme,
       home: new LoginPage(),
       routes: <String, WidgetBuilder>{
-        '/Home': (BuildContext context) => new Home(),
+        '/Home': (BuildContext context) => new LandingPage(),
         '/result': (BuildContext context) => new BookingResult()
       },
     );
@@ -205,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
 
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('user', json.encode(resJson['customer']));
-          Route route = MaterialPageRoute(builder: (context) => Home());
+          Route route = MaterialPageRoute(builder: (context) => LandingPage());
           Navigator.pushReplacement(context, route);
         } else {
 //      new user go to register
@@ -420,7 +423,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('user', json.encode(resJson['customer']));
         _customer = Customer.fromJson(resJson['customer']);
         CUSTOMER = _customer;
-        Route route = MaterialPageRoute(builder: (context) => Home());
+        Route route = MaterialPageRoute(builder: (context) => LandingPage());
         Navigator.pushReplacement(context, route);
       } else {
 //      user not found navigate to registration
@@ -519,7 +522,7 @@ _getUser(context) async {
   String user = prefs.getString("user");
   if (user != null) {
   CUSTOMER = Customer.fromJson(json.decode(user));
-    Route route = MaterialPageRoute(builder: (context) => Home());
+    Route route = MaterialPageRoute(builder: (context) => LandingPage());
     Navigator.pushReplacement(context, route);
   }
 }

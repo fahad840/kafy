@@ -23,6 +23,10 @@ class VideoState extends State<VideoExample> {
   @override
   void initState() {
     super.initState();
+    createVideo();
+    playerController.play();
+    playerController.setLooping(true);
+
     listener = () {
       setState(() {});
     };
@@ -30,12 +34,12 @@ class VideoState extends State<VideoExample> {
 
   void createVideo() {
     if (playerController == null) {
-      playerController = VideoPlayerController.asset(
-          "resources/video/LoaderVideo-Kafy.mp4")
-        ..addListener(listener)
-        ..setVolume(1.0)
-        ..initialize()
-        ..play();
+      playerController =
+          VideoPlayerController.asset("resources/video/LoaderVideo-Kafy.mp4")
+            ..addListener(listener)
+            ..setVolume(1.0)
+            ..initialize()
+            ..play();
     } else {
       if (playerController.value.isPlaying) {
         playerController.pause();
@@ -47,35 +51,62 @@ class VideoState extends State<VideoExample> {
   }
 
   @override
-  void deactivate() {
-    playerController.setVolume(0.0);
-    playerController.removeListener(listener);
-    super.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Video Example'),
-      ),
-      body: Center(
-          child: AspectRatio(
-              aspectRatio: 1 / 1,
-              child: Container(
-                child: (playerController != null
-                    ? VideoPlayer(
+        body: Stack(
+      children: <Widget>[
+        Container(
+          child: (playerController != null
+              ? VideoPlayer(
                   playerController,
                 )
-                    : Container()),
-              ))),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          createVideo();
-          playerController.play();
-        },
-        child: Icon(Icons.play_arrow),
-      ),
-    );
+              : Container()),
+        ),
+        Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        onPressed: () {},
+                        color: Colors.teal,
+                        child: Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                    ),
+                    Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        onPressed: () {},
+                        color: Colors.teal,
+                        child: Text(
+                          "Register",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    )
+                  ]),
+            ))
+      ],
+    ));
   }
 }

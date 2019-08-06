@@ -9,11 +9,17 @@ import 'localization/app_translations.dart';
 import 'main.dart';
 import 'registermobile.dart';
 import 'dto/customer.dart';
+import 'utility.dart';
+import 'home.dart';
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
 //  MapView.setApiKey("AIzaSyDLwsfPUlJLwLBrpEKcHlodvd9ksnSQWsM");
   runApp(new LandingPage());
 }
+SharedPreferences prefs;
 
 final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.teal,
@@ -74,6 +80,7 @@ class VideoState extends State<MyAppState> {
   @override
   void initState() {
     super.initState();
+    _getUser(context);
     _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
     application.onLocaleChanged = onLocaleChange;
 
@@ -176,5 +183,15 @@ class VideoState extends State<MyAppState> {
                 ))
           ],
         ));
+  }
+
+  _getUser(context) async {
+    prefs = await SharedPreferences.getInstance();
+    String user = prefs.getString("user");
+    if (user != null) {
+      CUSTOMER = Customer.fromJson(json.decode(user));
+      Route route = MaterialPageRoute(builder: (context) => Home());
+      Navigator.pushReplacement(context, route);
+    }
   }
 }

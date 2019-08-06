@@ -25,10 +25,6 @@ import 'localization/app_translations_delegate.dart';
 import 'localization/application.dart';
 import 'localization/app_translations.dart';
 
-void main() {
-//  MapView.setApiKey("AIzaSyDLwsfPUlJLwLBrpEKcHlodvd9ksnSQWsM");
-  runApp(new MyApp());
-}
 
 //final ThemeData kIOSTheme = new ThemeData(
 //    primaryColor: Colors.grey[100],
@@ -105,7 +101,7 @@ class MyAppState extends State<MyApp> {
           : kDefaultTheme,
       home: new LoginPage(),
       routes: <String, WidgetBuilder>{
-        '/Home': (BuildContext context) => new LandingPage(),
+        '/Home': (BuildContext context) => new Home(),
         '/result': (BuildContext context) => new BookingResult()
       },
     );
@@ -208,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
 
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('user', json.encode(resJson['customer']));
-          Route route = MaterialPageRoute(builder: (context) => LandingPage());
+          Route route = MaterialPageRoute(builder: (context) => Home());
           Navigator.pushReplacement(context, route);
         } else {
 //      new user go to register
@@ -423,7 +419,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('user', json.encode(resJson['customer']));
         _customer = Customer.fromJson(resJson['customer']);
         CUSTOMER = _customer;
-        Route route = MaterialPageRoute(builder: (context) => LandingPage());
+        Route route = MaterialPageRoute(builder: (context) => Home());
         Navigator.pushReplacement(context, route);
       } else {
 //      user not found navigate to registration
@@ -522,7 +518,7 @@ _getUser(context) async {
   String user = prefs.getString("user");
   if (user != null) {
   CUSTOMER = Customer.fromJson(json.decode(user));
-    Route route = MaterialPageRoute(builder: (context) => LandingPage());
+    Route route = MaterialPageRoute(builder: (context) => Home());
     Navigator.pushReplacement(context, route);
   }
 }

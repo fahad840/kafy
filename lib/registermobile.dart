@@ -41,7 +41,9 @@ class RegisterState extends State<RegisterMobilePage> {
   }
   @override
   Widget build(BuildContext context) {
-    var textController = new TextEditingController(text: widget.customer.phone);
+    var textController;
+      textController = new TextEditingController(text: widget.customer.phone);
+
 
     return new Scaffold(
       key: _scaffoldState,
@@ -57,11 +59,15 @@ class RegisterState extends State<RegisterMobilePage> {
                 TextField(
                   controller: textController,
                   keyboardType: TextInputType.phone,
+                  inputFormatters:[
+                    LengthLimitingTextInputFormatter(12),
+                  ],
                   decoration: new InputDecoration(
+
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                       hintText: '966500000000',
-                      enabled: false,
+
                       labelText:
                           AppTranslations.of(context).text("mobile_number"),
                       prefixIcon: const Icon(
@@ -72,6 +78,7 @@ class RegisterState extends State<RegisterMobilePage> {
                         icon: Icon(Icons.arrow_right),
                         color: Colors.transparent,
                       ),
+
                       suffixStyle: const TextStyle(color: Colors.green)),
                 ),
                 Form(
@@ -310,23 +317,31 @@ class RegisterState extends State<RegisterMobilePage> {
   }
 
   _sendOTP() {
-    httpPost(SERVERURL + "customer/otp", json.encode(widget.customer))
-        .then((res) async {
-      var resJson = json.decode(res);
-      if (resJson['result'] == 1) {
-        // otp sent
-        Route route =
-            MaterialPageRoute(builder: (context) => OTPPage(widget.customer));
-        Navigator.push(context, route);
-      } else {
-        //sending otp failed
-      }
-    }).catchError((error) {
+    if(widget.customer.phone.toString().startsWith("9665") && widget.customer.phone.toString().length==12) {
+      httpPost(SERVERURL + "customer/otp", json.encode(widget.customer))
+          .then((res) async {
+        var resJson = json.decode(res);
+        if (resJson['result'] == 1) {
+          // otp sent
+          Route route =
+          MaterialPageRoute(builder: (context) => OTPPage(widget.customer));
+          Navigator.push(context, route);
+        } else {
+          //sending otp failed
+        }
+      }).catchError((error) {
 //    connection error
+        _scaffoldState.currentState.showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content:
+            Text(AppTranslations.of(context).text("connection_error"))));
+      });
+    }
+    else{
       _scaffoldState.currentState.showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content:
-              Text(AppTranslations.of(context).text("connection_error"))));
-    });
+          Text(AppTranslations.of(context).text("valid_num"))));
+    }
   }
 }

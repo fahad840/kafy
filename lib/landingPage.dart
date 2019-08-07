@@ -24,11 +24,13 @@ SharedPreferences prefs;
 final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.teal,
   accentColor: Colors.amber[400],
+  fontFamily: 'Cairo'
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.teal,
   accentColor: Colors.amber[400],
+    fontFamily: 'Cairo'
 );
 
 class LandingPage extends StatelessWidget {
@@ -84,7 +86,11 @@ class VideoState extends State<MyAppState> {
     _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
     application.onLocaleChanged = onLocaleChange;
 
-    createVideo();
+    playerController = VideoPlayerController.asset("resources/video/LoaderVideo-Kafy.mp4")
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
     playerController.play();
     playerController.setLooping(true);
 

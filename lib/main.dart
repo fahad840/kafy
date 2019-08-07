@@ -35,11 +35,15 @@ import 'localization/app_translations.dart';
 final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.teal,
   accentColor: Colors.amber[400],
+    fontFamily: 'Cairo'
+
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.teal,
   accentColor: Colors.amber[400],
+    fontFamily: 'Cairo'
+
 );
 
 SharedPreferences prefs;

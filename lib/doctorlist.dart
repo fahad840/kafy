@@ -287,7 +287,7 @@ class DoctorListState extends State<DoctorList> {
           );
         },
         child: Container(
-          height: 120.0,
+          height: 130.0,
           padding: EdgeInsets.only(top: 10.0),
           child: Row(
             children: <Widget>[

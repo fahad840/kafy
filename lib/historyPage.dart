@@ -41,7 +41,7 @@ class historyState extends State<historyPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("History"),
+        title: Text( AppTranslations.of(context).text("history")),
       ),
       body: Stack(
         children: <Widget>[

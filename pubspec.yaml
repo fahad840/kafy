@@ -76,6 +76,7 @@ flutter:
     - resources/lang/en.json
     - resources/images/kafy_logo.png
     - resources/images/kafy_logo_white.png
+    - resources/images/placeholder-profile.png
     - resources/video/LoaderVideo-Kafy.mp4
 
   # An image asset can refer to one or more resolution-specific "variants", see

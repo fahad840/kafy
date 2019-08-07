@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-//import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -118,7 +118,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-//  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-//    firebaseCloudMessaging_Listeners();
+    firebaseCloudMessaging_Listeners();
 
 
 
@@ -155,38 +155,39 @@ class _LoginPageState extends State<LoginPage> {
     });
     // _googleSignIn.signInSilently();
   }
-//  void firebaseCloudMessaging_Listeners() {
-//    if (Platform.isIOS) iOS_Permission();
-//
-//    _firebaseMessaging.getToken().then((token){
-//      print(token);
-//      CUSTOMER.deviceToken=token;
-//
-//    });
-//
-//    _firebaseMessaging.configure(
-//      onMessage: (Map<String, dynamic> message) async {
-//        print('on message $message');
-//      },
-//      onResume: (Map<String, dynamic> message) async {
-//        print('on resume $message');
-//      },
-//      onLaunch: (Map<String, dynamic> message) async {
-//        print('on launch $message');
-//      },
-//    );
-//  }
-//
-//  void iOS_Permission() {
-//    _firebaseMessaging.requestNotificationPermissions(
-//        IosNotificationSettings(sound: true, badge: true, alert: true)
-//    );
-//    _firebaseMessaging.onIosSettingsRegistered
-//        .listen((IosNotificationSettings settings)
-//    {
-//      print("Settings registered: $settings");
-//    });
-//  }
+  void firebaseCloudMessaging_Listeners() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.getToken().then((token){
+      print(token);
+      CUSTOMER.deviceToken=token;
+
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings)
+    {
+      print("Settings registered: $settings");
+    });
+  }
+
 
   Future loginMobile(BuildContext context, phone) async {
     if(phone.toString().startsWith("9665") && phone.toString().length==12) {
@@ -312,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     Text(
                                       AppTranslations.of(context).text("g_login"),
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.white ,fontSize: 10),
                                     ),
                                   ],
                                 ),
@@ -334,8 +335,8 @@ class _LoginPageState extends State<LoginPage> {
                                       padding: EdgeInsets.all(5.0),
                                     ),
                                     Text(
-                                      AppTranslations.of(context).text("fb_login"),
-                                      style: TextStyle(color: Colors.white),
+                                      AppTranslations.of(context).text("fb_login",),
+                                      style: TextStyle(color: Colors.white,fontSize: 10),
                                     ),
                                   ],
                                 ),

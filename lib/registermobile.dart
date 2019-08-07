@@ -50,7 +50,8 @@ class RegisterState extends State<RegisterMobilePage> {
       appBar: new AppBar(
         title: new Text(AppTranslations.of(context).text("register")),
       ),
-      body: Stack(
+      body: SingleChildScrollView(
+    child:Stack(
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(20.0),
@@ -99,7 +100,7 @@ class RegisterState extends State<RegisterMobilePage> {
               : Container()
         ],
       ),
-    );
+    ));
   }
   void _handleRadioValueChange1(int value) {
     setState(() {

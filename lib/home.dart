@@ -17,7 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'localization/app_translations.dart';
 
-
 SharedPreferences prefs;
 
 class Home extends StatefulWidget {
@@ -40,11 +39,10 @@ class _HomeState extends State<Home> {
   initState() {
     // TODO: implement initState
     super.initState();
-    _firebaseMessaging.getToken().then((token){
+    _firebaseMessaging.getToken().then((token) {
       print(token);
-     CUSTOMER.deviceToken=token;
+      CUSTOMER.deviceToken = token;
       updateToken();
-
     });
     _firebaseMessaging.configure(onLaunch: (Map<String, dynamic> msg) {
       print(" onLaunch called");
@@ -55,7 +53,6 @@ class _HomeState extends State<Home> {
       print(msg);
     });
     _getUser();
-
 
 //    _getLocation();
   }
@@ -85,10 +82,9 @@ class _HomeState extends State<Home> {
   }
 
   void updateToken() async {
-
-
-    httpPost(SERVERURL + "customer/updateCustomerDeviceToken",json.encode(CUSTOMER)).then((res) async {
-
+    httpPost(SERVERURL + "customer/updateCustomerDeviceToken",
+            json.encode(CUSTOMER))
+        .then((res) async {
       var resJson = json.decode(res);
       print(res);
       if (resJson['result'] == 1) {
@@ -104,8 +100,7 @@ class _HomeState extends State<Home> {
 //    connection error
       SnackBar(
           backgroundColor: Colors.red,
-          content:
-          Text(AppTranslations.of(context).text("connection_error")));
+          content: Text(AppTranslations.of(context).text("connection_error")));
     });
   }
 
@@ -153,26 +148,33 @@ signoutApp(BuildContext context) async {
   Navigator.pushReplacement(context, route);
 }
 
-
-
 Widget drawerList(BuildContext context, Customer customer) {
   return ListView(
     children: <Widget>[
       Container(
-        height: 200.0,
+        height: 150.0,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              circleImage((customer != null && customer.photoUrl != null)
-                  ? customer.photoUrl
-                  : FILESURL + "placeholder-profile.png"),
+              customer != null && customer.photoUrl != null
+                  ? circleImage(customer.photoUrl)
+                  : Image.asset('resources/images/placeholder-profile.png',
+                      width: 80.0, height: 80.0, fit: BoxFit.cover),
+              Padding(padding: EdgeInsets.all(10),),
               Text(
                 customer != null ? customer.name : "NA",
-                style: TextStyle(fontSize: 18.0),
+                style: TextStyle(fontSize: 20.0),
               )
             ],
           ),
+        ),
+      ),
+
+      Padding(
+        padding: EdgeInsets.all(10),
+        child: Divider(
+          height: 1,
         ),
       ),
 //      ListTile(
@@ -199,7 +201,8 @@ Widget drawerList(BuildContext context, Customer customer) {
         title: Text(AppTranslations.of(context).text("language")),
         onTap: () {
           Navigator.of(context).pop();
-          Route route = MaterialPageRoute(builder: (context) => languageSetting());
+          Route route =
+              MaterialPageRoute(builder: (context) => languageSetting());
           Navigator.push(context, route);
         },
       ),
@@ -213,8 +216,6 @@ Widget drawerList(BuildContext context, Customer customer) {
     ],
   );
 }
-
-
 
 class Person {
   Person(this.name, this.address);

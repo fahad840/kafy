@@ -573,12 +573,46 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void sendMessagedoc(String bookingId, String name,String message) {
+
+
+    httpPost(SERVERURL + "customer/sendMessageDoc",
+        json.encode({"bookingId": bookingId, "name": name,"message":message})).then((res) async {
+
+      var resJson = json.decode(res);
+      print("message sending");
+      print(res);
+      if (resJson['result'] == 1) {
+
+//        scaffoldState.currentState.showSnackBar(
+//            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
+
+//        getBookings();
+      } else {
+        //verification failed
+//        SnackBar(backgroundColor: Colors.red, content: Text("Error"));
+      }
+    }).catchError((error) {
+//    connection error
+      setState(() {
+      });
+      print("message error");
+      print(error);
+//      SnackBar(
+//          backgroundColor: Colors.red,
+//          content:
+//          Text(AppTranslations.of(context).text("connection_error")));
+    });
+  }
+
   Future<Null> _handleSubmitted(String text) async {
     _textController.clear();
     setState(() {
       _isComposing = false;
     });
     _sendMessage(text: text);
+    sendMessagedoc(widget.booking['id'].toString(), CUSTOMER.name, text);
+
   }
 
   void _sendMessage({String text, String imageUrl, String audioUrl}) {
@@ -674,6 +708,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return responseStr;
   }
 }
+
+
 
 class ChatMessage extends StatelessWidget {
   ChatMessage({this.snapshot, this.animation});
@@ -775,4 +811,6 @@ class CompositeSubscription {
   List<StreamSubscription> toList() {
     return this._subscriptions.toList();
   }
+
+
 }

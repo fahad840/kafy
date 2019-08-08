@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'page.dart';
@@ -38,6 +39,8 @@ class currentLoctaionState extends State<currentLocation> {
   );
   Map<MarkerId, Marker> markers =
       <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
+  BitmapDescriptor myIcon;
+
 
   @override
   void initState() {
@@ -47,17 +50,26 @@ class currentLoctaionState extends State<currentLocation> {
     DOCTOR=widget.doctor;
     BOOKING=widget.booking;
     _currentLocation();
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(60, 60)), 'resources/images/marker.png')
+        .then((onValue) {
+      myIcon = onValue;
+    });
     super.initState();
+
   }
 
   void _add(LatLng value) {
     var markerIdVal = "2345";
     final MarkerId markerId = MarkerId(markerIdVal);
 
+
     // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
       position: value,
+      icon: myIcon,
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
     );
 
@@ -103,6 +115,7 @@ class currentLoctaionState extends State<currentLocation> {
                 _add(pos);
               });
             },
+
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
 

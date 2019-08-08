@@ -295,54 +295,54 @@ class _LoginPageState extends State<LoginPage> {
                                     const TextStyle(color: Colors.green)),
                           ),
                           Padding(padding: EdgeInsets.all(10.0)),
-                          Row(
-                            children: <Widget>[
-                              FlatButton(
-                                padding: EdgeInsets.all(15.0),
-                                color: color_google,
-                                onPressed: _gmailLogin,
-                                splashColor: Colors.white,
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      FontAwesomeIcons.google,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                    ),
-                                    Text(
-                                      AppTranslations.of(context).text("g_login"),
-                                      style: TextStyle(color: Colors.white ,fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(padding: EdgeInsets.all(10.0)),
-                              FlatButton(
-                                padding: EdgeInsets.all(15.0),
-                                color: color_fb,
-                                onPressed: () {
-                                 // _fbLogin();
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      FontAwesomeIcons.facebook,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                    ),
-                                    Text(
-                                      AppTranslations.of(context).text("fb_login",),
-                                      style: TextStyle(color: Colors.white,fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+//                          Row(
+//                            children: <Widget>[
+//                              FlatButton(
+//                                padding: EdgeInsets.all(15.0),
+//                                color: color_google,
+//                                onPressed: _gmailLogin,
+//                                splashColor: Colors.white,
+//                                child: Row(
+//                                  children: <Widget>[
+//                                    Icon(
+//                                      FontAwesomeIcons.google,
+//                                      color: Colors.white,
+//                                    ),
+//                                    Padding(
+//                                      padding: EdgeInsets.all(5.0),
+//                                    ),
+//                                    Text(
+//                                      AppTranslations.of(context).text("g_login"),
+//                                      style: TextStyle(color: Colors.white ,fontSize: 10),
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
+//                              Padding(padding: EdgeInsets.all(10.0)),
+//                              FlatButton(
+//                                padding: EdgeInsets.all(15.0),
+//                                color: color_fb,
+//                                onPressed: () {
+//                                 // _fbLogin();
+//                                },
+//                                child: Row(
+//                                  children: <Widget>[
+//                                    Icon(
+//                                      FontAwesomeIcons.facebook,
+//                                      color: Colors.white,
+//                                    ),
+//                                    Padding(
+//                                      padding: EdgeInsets.all(5.0),
+//                                    ),
+//                                    Text(
+//                                      AppTranslations.of(context).text("fb_login",),
+//                                      style: TextStyle(color: Colors.white,fontSize: 10),
+//                                    ),
+//                                  ],
+//                                ),
+//                              )
+//                            ],
+//                          ),
                           Padding(
                             padding: EdgeInsets.all(10.0),
                           )

@@ -169,6 +169,7 @@ class BookingState extends State<BookingPage> {
                                         new TextField(
                                           controller: reasonController,
                                           maxLines: 3,
+                                          textInputAction: TextInputAction.done,
                                           decoration:
                                           new InputDecoration(
                                               border:
@@ -222,7 +223,7 @@ class BookingState extends State<BookingPage> {
                                                       bookings.elementAt(i)['id']
                                                           .toString(),
                                                       reasonController
-                                                          .text,context);
+                                                          .text);
                                                 }
                                               },
                                             ),
@@ -323,7 +324,7 @@ class BookingState extends State<BookingPage> {
     });
   }
 
-  void rejectBooking(String bookingId, String reason,BuildContext context) {
+  void rejectBooking(String bookingId, String reason) {
     setState(() {
       _isLoading = true;
     });
@@ -338,6 +339,7 @@ class BookingState extends State<BookingPage> {
       if (resJson['result'] == 1) {
 
         Navigator.of(context).pop();
+
         SnackBar(
             backgroundColor: Colors.green,
             content:

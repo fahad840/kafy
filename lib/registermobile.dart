@@ -41,8 +41,9 @@ class RegisterState extends State<RegisterMobilePage> {
   }
   @override
   Widget build(BuildContext context) {
-    var textController;
-      textController = new TextEditingController(text: widget.customer.phone);
+
+
+
 
 
     return new Scaffold(
@@ -57,31 +58,6 @@ class RegisterState extends State<RegisterMobilePage> {
             padding: EdgeInsets.all(20.0),
             child: Column(
               children: <Widget>[
-                TextField(
-                  controller: textController,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters:[
-                    LengthLimitingTextInputFormatter(12),
-                  ],
-                  decoration: new InputDecoration(
-
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      hintText: '966500000000',
-
-                      labelText:
-                          AppTranslations.of(context).text("mobile_number"),
-                      prefixIcon: const Icon(
-                        Icons.phone,
-                        color: Colors.green,
-                      ),
-                      suffix: IconButton(
-                        icon: Icon(Icons.arrow_right),
-                        color: Colors.transparent,
-                      ),
-
-                      suffixStyle: const TextStyle(color: Colors.green)),
-                ),
                 Form(
                   key: _formKey,
                   autovalidate: _autoValidate,
@@ -121,11 +97,50 @@ class RegisterState extends State<RegisterMobilePage> {
     });
   }
 
+  String replaceArabicNumber(String input) {
+    const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const farsi = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+    for (int i = 0; i < farsi.length; i++) {
+      input = input.replaceAll(farsi[i], english[i]);
+    }
+
+    return input;
+  }
+
+
   Widget formUI() {
-    var textController = new TextEditingController();
 
     return new Column(
       children: <Widget>[
+        TextFormField(
+          keyboardType: TextInputType.phone,
+          inputFormatters:[
+            LengthLimitingTextInputFormatter(12),
+          ],
+          onSaved: (String val) {
+            widget.customer.phone = val;
+          },
+          decoration: new InputDecoration(
+
+              border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.teal)),
+              hintText: '966500000000',
+
+              labelText:
+              AppTranslations.of(context).text("mobile_number"),
+              prefixIcon: const Icon(
+                Icons.phone,
+                color: Colors.green,
+              ),
+
+              suffix: IconButton(
+                icon: Icon(Icons.arrow_right),
+                color: Colors.transparent,
+              ),
+
+              suffixStyle: const TextStyle(color: Colors.green)),
+        ),
         TextFormField(
           validator: (val) {
             if (val.length < 3)

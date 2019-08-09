@@ -557,7 +557,6 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
         ],
       ):Container(),
       widget.booking['status'].toString()=="chat"?
-
       _isShowcase
           ? GestureDetector(
         onTap: () {

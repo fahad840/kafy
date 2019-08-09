@@ -450,6 +450,8 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ):Container(),
+      widget.booking['status'].toString()=="chat"?
+
       _isShowcase
           ? GestureDetector(
               onTap: () {
@@ -485,7 +487,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   )),
             )
-          : Container(),
+          : Container():Container(),
       isRecording
           ? Material(
               color: Colors.transparent,

@@ -19,6 +19,7 @@
   "cost": "Cost",
   "sar": "SAR",
   "chat": "Chat",
+  "Send": "Send",
   "send_a_message": "Send a message",
   "experience": "Experience",
   "register": "Register",
@@ -68,6 +69,7 @@
   "Cancel Request":"Cancel Request",
 
   "book_now":"Book Now",
+  "book_msg": "Click this to book an appointment after confirmation",
   "select_location":"Select location",
   "Save":"Save",
   "total_price":"Total Price",

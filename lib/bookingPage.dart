@@ -75,9 +75,6 @@ class BookingState extends State<BookingPage> {
                             ),
                           ),
                         ),
-
-
-
                       ],
                     ),
 
@@ -97,7 +94,6 @@ class BookingState extends State<BookingPage> {
                               backgroundImage: new NetworkImage(
                                   doctors.elementAt(i)['photoUrl']!=null?doctors.elementAt(i)['photoUrl']:FILESURL + "placeholder-profile.png"),
                             ),
-
                           ),
                           Expanded(
                             child:
@@ -117,10 +113,7 @@ class BookingState extends State<BookingPage> {
                             ],
                           )
                           )
-
                         ],
-
-
                       ),
                     ),
                     Padding(

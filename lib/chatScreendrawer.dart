@@ -370,6 +370,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
           ]),
         ),
       ),
+      widget.booking['status'].toString()=="chat"?
       Stack(
         children: <Widget>[
           Container(
@@ -554,7 +555,9 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
             ),
           )
         ],
-      ),
+      ):Container(),
+      widget.booking['status'].toString()=="chat"?
+
       _isShowcase
           ? GestureDetector(
         onTap: () {
@@ -582,14 +585,15 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                 Material(
                   color: Colors.transparent,
                   child: Text(
-                    "click this to book an appointment after confirmation",
+                    AppTranslations.of(context).text(
+                        "book_msg"),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
             )),
       )
-          : Container(),
+          : Container(): Container(),
       isRecording
           ? Material(
           color: Colors.transparent,
@@ -734,7 +738,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                 margin: new EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? new CupertinoButton(
-                  child: new Text("Send"),
+                  child: new Text(AppTranslations.of(context).text('Send')),
                   onPressed: _isComposing
                       ? () => _handleSubmitted(_textController.text)
                       : null,

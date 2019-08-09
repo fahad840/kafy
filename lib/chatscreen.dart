@@ -364,6 +364,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ]),
         ),
       ),
+      widget.booking['status'].toString()=="chat"?
       Stack(
         children: <Widget>[
           Container(
@@ -448,7 +449,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           )
         ],
-      ),
+      ):Container(),
       _isShowcase
           ? GestureDetector(
               onTap: () {
@@ -476,7 +477,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       Material(
                         color: Colors.transparent,
                         child: Text(
-                          "click this to book an appointment after confirmation",
+                          AppTranslations.of(context).text(
+                              "book_msg"),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -553,7 +555,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 margin: new EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? new CupertinoButton(
-                        child: new Text("Send"),
+                        child: new Text(AppTranslations.of(context).text('Send')),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,

@@ -245,7 +245,7 @@ class RegisterState extends State<RegisterMobilePage> {
                 children: <Widget>[
                   Text(
                     AppTranslations.of(context).text("register"),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white , fontFamily: 'Cairo'),
                   )
                 ],
               )),

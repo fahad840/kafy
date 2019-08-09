@@ -258,7 +258,7 @@ class DoctorProfilePageState extends State<DoctorProfilePage> {
                   children: <Widget>[
                     !_isLoading
                         ? CupertinoButton(
-                            child: Text(AppTranslations.of(context).text("start_chat")),
+                            child: Text(AppTranslations.of(context).text("start_chat") ,style: TextStyle(fontFamily: 'Cairo'),),
                             onPressed: () {
                               _startBooking();
                             },

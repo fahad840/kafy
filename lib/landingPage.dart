@@ -12,6 +12,8 @@ import 'dto/customer.dart';
 import 'utility.dart';
 import 'home.dart';
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:io' show Platform;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,47 +21,46 @@ void main() {
 //  MapView.setApiKey("AIzaSyDLwsfPUlJLwLBrpEKcHlodvd9ksnSQWsM");
   runApp(new LandingPage());
 }
+
 SharedPreferences prefs;
 
 final ThemeData kIOSTheme = new ThemeData(
-  primarySwatch: Colors.teal,
-  accentColor: Colors.amber[400],
-  fontFamily: 'Cairo'
-);
+    primarySwatch: Colors.teal,
+    accentColor: Colors.amber[400],
+    fontFamily: 'Cairo');
 
 final ThemeData kDefaultTheme = new ThemeData(
-  primarySwatch: Colors.teal,
-  accentColor: Colors.amber[400],
-    fontFamily: 'Cairo'
-);
+    primarySwatch: Colors.teal,
+    accentColor: Colors.amber[400],
+    fontFamily: 'Cairo');
 
 class LandingPage extends StatelessWidget {
   Locale locale;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kafy',
-        localeResolutionCallback: (deviceLocale, supportedLocales) {
-          if (this.locale == null) {
-            this.locale = Locale('ar');
-            print(deviceLocale);
-          }
-          return this.locale;
-        },
-        localizationsDelegates: [
-          // ... app-specific localization delegate[s] here
-          AppTranslationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: application.supportedLocales()
-        // Arabic
-        // ... other locales the app supports
-        ,
-        theme: defaultTargetPlatform == TargetPlatform.iOS
-            ? kIOSTheme
-            : kDefaultTheme,
-
+      localeResolutionCallback: (deviceLocale, supportedLocales) {
+        if (this.locale == null) {
+          this.locale = Locale('ar');
+          print(deviceLocale);
+        }
+        return this.locale;
+      },
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        AppTranslationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: application.supportedLocales()
+      // Arabic
+      // ... other locales the app supports
+      ,
+      theme: defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
+          : kDefaultTheme,
       home: MyAppState(),
     );
   }
@@ -67,8 +68,8 @@ class LandingPage extends StatelessWidget {
 
 }
 
-class MyAppState extends StatefulWidget {
 
+class MyAppState extends StatefulWidget {
   @override
   VideoState createState() => VideoState();
 }
@@ -78,23 +79,25 @@ class VideoState extends State<MyAppState> {
 
   VideoPlayerController playerController;
   VoidCallback listener;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
 
   @override
   void initState() {
     super.initState();
+    firebaseCloudMessaging_Listeners();
     _getUser(context);
     _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
     application.onLocaleChanged = onLocaleChange;
 
-    playerController = VideoPlayerController.asset("resources/video/LoaderVideo-Kafy.mp4")
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+    playerController =
+        VideoPlayerController.asset("resources/video/LoaderVideo-Kafy.mp4")
+          ..initialize().then((_) {
+            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+            setState(() {});
+          });
     playerController.play();
     playerController.setLooping(true);
-
-
   }
 
   void onLocaleChange(Locale locale) {
@@ -102,6 +105,39 @@ class VideoState extends State<MyAppState> {
       _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
     });
   }
+  void firebaseCloudMessaging_Listeners() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.getToken().then((token){
+      print(token);
+      CUSTOMER.deviceToken=token;
+
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings)
+    {
+      print("Settings registered: $settings");
+    });
+  }
+
 
   void createVideo() {
     if (playerController == null) {
@@ -123,72 +159,90 @@ class VideoState extends State<MyAppState> {
 
   @override
   Widget build(BuildContext context) {
-    return
-         Scaffold(
-            body: Stack(
+    return Scaffold(
+        body: Stack(
+      children: <Widget>[
+        Container(
+          child: (playerController != null
+              ? VideoPlayer(
+                  playerController,
+                )
+              : Container()),
+        ),
+        new Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: (playerController != null
-                  ? VideoPlayer(
-                      playerController,
-                    )
-                  : Container()),
-            ),
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Container(
-                          color: Colors.transparent,
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: FlatButton(
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                            ),
-                            onPressed: () {
-                              Route route = MaterialPageRoute(builder: (context) => MyApp());
-                              Navigator.pushReplacement(context, route);
-                            },
-                            color: Colors.teal,
-                            child: Text(
-                              AppTranslations.of(context).text("login"),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(5),
-                        ),
-                        Container(
-                          color: Colors.transparent,
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: FlatButton(
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                            ),
-                            onPressed: () {
-                              Customer customer=new Customer();
-                              Route route = MaterialPageRoute(builder: (context) => RegisterMobilePage(customer));
-                              Navigator.pushReplacement(context, route);
-                            },
-                            color: Colors.teal,
-                            child: Text(
-                              AppTranslations.of(context).text("register"),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
-                        )
-                      ]),
-                ))
+            Row(
+
+              mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+              new Image.asset(
+                'resources/images/kafy_logo_white.png',
+                width: 200.0,
+                height: 200.0,
+                fit: BoxFit.cover,
+              ),
+            ]),
           ],
-        ));
+        ),
+        Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        onPressed: () {
+                          Route route =
+                              MaterialPageRoute(builder: (context) => MyApp());
+                          Navigator.push(context, route);
+                        },
+                        color: Colors.teal,
+                        child: Text(
+                          AppTranslations.of(context).text("login"),
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                    ),
+                    Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        onPressed: () {
+                          Customer customer = new Customer();
+                          Route route = MaterialPageRoute(
+                              builder: (context) =>
+                                  RegisterMobilePage(customer));
+                          Navigator.push(context, route);
+                        },
+                        color: Colors.teal,
+                        child: Text(
+                          AppTranslations.of(context).text("register"),
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    )
+                  ]),
+            ))
+      ],
+    ));
   }
 
   _getUser(context) async {

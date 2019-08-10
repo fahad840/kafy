@@ -270,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           TextField(
+                            enableInteractiveSelection: false,
                             controller: textController,
                             keyboardType: TextInputType.phone,
                             inputFormatters:[

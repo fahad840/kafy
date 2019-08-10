@@ -44,6 +44,7 @@ class _OTPPageState extends State<OTPPage> {
               child: Container(
                 constraints: BoxConstraints.expand(width: 100.0),
                 child: TextField(
+                  enableInteractiveSelection: false,
                   maxLength: 4,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,

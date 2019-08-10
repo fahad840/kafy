@@ -6,8 +6,12 @@ import 'package:kafy/booking_result.dart';
 import 'package:kafy/utility.dart';
 import 'package:geocoder/geocoder.dart';
 import 'dto/doctor.dart';
+import 'package:intl/intl.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'localization/app_translations.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 
 class Review extends StatefulWidget {
   @override
@@ -90,6 +94,7 @@ class _ReviewState extends State<Review> {
   }
 
   var _visitTime = 'Select';
+  var _visitDate=DateTime.now().toUtc().toString().split(" ")[0];
   var enableBooking = false;
   var _address = '';
   double lat, lng;
@@ -212,10 +217,28 @@ class _ReviewState extends State<Review> {
                           ],
                         ),
                       ),
-                      divider(),
-                      tableWidget(
-                          AppTranslations.of(context).text("visit_date"),
-                          new DateTime.now().toUtc().toString().split(" ")[0]),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Center(
+                                child: Text( AppTranslations.of(context).text("visit_date"))),
+                            flex: 1,
+                          ),
+                          Expanded(
+                            child: Center(
+                                child: FlatButton(
+                                  child: new Text(
+                                    "$_visitDate",
+                                    style: TextStyle(color: primaryColor),
+                                  ),
+                                  onPressed: () async {
+                                   _selectIOSDate();
+                                  },
+                                )),
+                            flex: 1,
+                          )
+                        ],
+                      ),
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -282,7 +305,7 @@ class _ReviewState extends State<Review> {
                   !_isLoading
                       ? CupertinoButton(
                           child: Text(
-                              AppTranslations.of(context).text("confirm")),
+                              AppTranslations.of(context).text("confirm") , style: TextStyle(fontFamily: 'Cairo'),),
                           onPressed: enableBooking
                               ? () {
                             for(int i=0;i<_selectedservices.length;i++)
@@ -305,6 +328,44 @@ class _ReviewState extends State<Review> {
             )
           ],
         ));
+  }
+
+  Future _selectIOSDate() async {
+    DatePicker.showDatePicker(context,
+        showTitleActions: true,
+        minTime: DateTime.now(),
+        onChanged: (date) {}, onConfirm: (date) {
+          print('confirm $date');
+
+          var formatter = new DateFormat('yyyy-MM-dd');
+          String formatted = formatter.format(date);
+
+//      _scaffoldState.currentState
+//          .showSnackBar(SnackBar(content: Text(picked.toString())));
+          setState(() {
+
+            _visitDate=formatted;
+          });
+        }, currentTime: DateTime.now(), locale: LocaleType.en);
+  }
+
+  Future _selectDate() async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: new DateTime.now(),
+        firstDate: new DateTime.now(),
+      lastDate: DateTime(2020)
+
+    );
+
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formatted = formatter.format(picked);
+
+//      _scaffoldState.currentState
+//          .showSnackBar(SnackBar(content: Text(picked.toString())));
+    setState(() {
+      _visitDate=formatted;
+    });
   }
 
   tableWidget(text, value) {

@@ -344,6 +344,14 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      _isLoading
+          ? Container(
+        color: Colors.black45,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      )
+          : Container(),
       new Scaffold(
         appBar: AppBar(
           title: Text(AppTranslations.of(context).text("chat")),
@@ -453,6 +461,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                                                           padding: EdgeInsets.all(10),
                                                                         ),
                                                                         new TextField(
+                                                                          enableInteractiveSelection: false,
                                                                           controller: reasonController,
                                                                           maxLines: 3,
                                                                           decoration:
@@ -715,6 +724,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
             ),
             new Flexible(
               child: new TextField(
+                enableInteractiveSelection: false,
                 controller: _textController,
                 onChanged: (String text) {
                   setState(() {

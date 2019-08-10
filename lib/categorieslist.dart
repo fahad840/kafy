@@ -93,6 +93,7 @@ class _CategoryListState extends State<CategoryList> {
               Padding(
                 padding: EdgeInsets.all(20),
                 child: new TextField(
+                  enableInteractiveSelection: false,
                   decoration: new InputDecoration(
                       labelText: AppTranslations.of(context).text("search")),
                   controller: controller,

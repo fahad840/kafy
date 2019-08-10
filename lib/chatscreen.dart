@@ -364,7 +364,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ]),
         ),
       ),
-      widget.booking['status'].toString()=="chat"?
       Stack(
         children: <Widget>[
           Container(
@@ -449,9 +448,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           )
         ],
-      ):Container(),
-      widget.booking['status'].toString()=="chat"?
-
+      ),
       _isShowcase
           ? GestureDetector(
               onTap: () {
@@ -487,7 +484,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   )),
             )
-          : Container():Container(),
+          : Container(),
       isRecording
           ? Material(
               color: Colors.transparent,
@@ -535,6 +532,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             new Flexible(
               child: new TextField(
+                enableInteractiveSelection: false,
                 controller: _textController,
                 onChanged: (String text) {
                   setState(() {

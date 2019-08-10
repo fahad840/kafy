@@ -114,6 +114,7 @@ class RegisterState extends State<RegisterMobilePage> {
     return new Column(
       children: <Widget>[
         TextFormField(
+          enableInteractiveSelection: false,
           keyboardType: TextInputType.phone,
           inputFormatters:[
             LengthLimitingTextInputFormatter(12),
@@ -142,6 +143,7 @@ class RegisterState extends State<RegisterMobilePage> {
               suffixStyle: const TextStyle(color: Colors.green)),
         ),
         TextFormField(
+          enableInteractiveSelection: false,
           validator: (val) {
             if (val.length < 3)
               return  AppTranslations.of(context).text("valid_name");
@@ -156,6 +158,7 @@ class RegisterState extends State<RegisterMobilePage> {
           keyboardType: TextInputType.text,
         ),
         TextFormField(
+          enableInteractiveSelection: false,
           validator: validateEmail,
           decoration: InputDecoration(
               labelText: AppTranslations.of(context).text("email")),
@@ -221,6 +224,7 @@ class RegisterState extends State<RegisterMobilePage> {
         ),
 
         TextFormField(
+          enableInteractiveSelection: false,
           decoration: InputDecoration(
               labelText: AppTranslations.of(context).text("age")),
           keyboardType: TextInputType.number,

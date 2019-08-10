@@ -17,22 +17,20 @@ class historyPage extends StatefulWidget {
 class historyState extends State<historyPage> {
   List bookings;
   List doctors;
-  List day=new List();
-  List date=new List();
-  List month=new List();
-  double rating=1;
+  List day = new List();
+  List date = new List();
+  List month = new List();
+  double rating = 1;
 
   DateTime now;
-  bool _isLoading=false;
+  bool _isLoading = false;
+
   @override
   void initState() {
     getBookings();
     // TODO: implement initState
     super.initState();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +39,12 @@ class historyState extends State<historyPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text( AppTranslations.of(context).text("history")),
+        title: Text(AppTranslations.of(context).text("history")),
       ),
       body: Stack(
         children: <Widget>[
           ListView.builder(
-                itemCount: bookings != null ? bookings.length : 0,
+              itemCount: bookings != null ? bookings.length : 0,
               itemBuilder: (context, i) => new Container(
                   decoration: new BoxDecoration(boxShadow: [
                     new BoxShadow(
@@ -115,7 +113,8 @@ class historyState extends State<historyPage> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Text(
-                                            AppTranslations.of(context).text("Timming"),
+                                            AppTranslations.of(context)
+                                                .text("Timming"),
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 16),
@@ -137,7 +136,8 @@ class historyState extends State<historyPage> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Text(
-                                            AppTranslations.of(context).text("Doctor"),
+                                            AppTranslations.of(context)
+                                                .text("Doctor"),
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 16),
@@ -178,7 +178,8 @@ class historyState extends State<historyPage> {
                                             MainAxisAlignment.spaceAround,
                                         children: <Widget>[
                                           Text(
-                                            AppTranslations.of(context).text("Status"),
+                                            AppTranslations.of(context)
+                                                .text("Status"),
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 16),
@@ -194,149 +195,171 @@ class historyState extends State<historyPage> {
                                           )
                                         ],
                                       ),
-                                      bookings.elementAt(i)['customer_rated']==0?
-                                      FlatButton(
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: <Widget>[
-                                            Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text( AppTranslations.of(context).text("Rate"))),
-                                            Padding(
-                                              padding: EdgeInsets.all(1),
-                                            ),
-                                            Icon(
-                                              Icons.star_border,
-                                              color: Colors.amber,
+                                      bookings.elementAt(i)['customer_rated'] ==
+                                              0
+                                          ? FlatButton(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: Text(
+                                                          AppTranslations.of(
+                                                                  context)
+                                                              .text("Rate"))),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(1),
+                                                  ),
+                                                  Icon(
+                                                    Icons.star_border,
+                                                    color: Colors.amber,
+                                                  )
+                                                ],
+                                              ),
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) =>
+                                                        new AlertDialog(
+                                                            title: new Text(
+                                                                AppTranslations.of(
+                                                                        context)
+                                                                    .text(
+                                                                        "Rating")),
+                                                            content:
+                                                                SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Text(AppTranslations.of(
+                                                                          context)
+                                                                      .text(
+                                                                          "please_rate")),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                  ),
+                                                                  SmoothStarRating(
+                                                                    allowHalfRating: false,
+                                                                    starCount: 5,
+                                                                    rating: rating,
+                                                                    size: 45.0,
+                                                                    onRatingChanged:
+                                                                        (v) {
+                                                                      rating = v;
+                                                                      setState(
+                                                                          () {rating = v;});
+                                                                    },
+                                                                    color: Colors
+                                                                        .amber,
+                                                                    borderColor:
+                                                                        Colors
+                                                                            .teal,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                  ),
+                                                                  new TextField(
+                                                                    textInputAction:
+                                                                        TextInputAction
+                                                                            .done,
+                                                                    enableInteractiveSelection:
+                                                                        false,
+                                                                    controller:
+                                                                        reasonController,
+                                                                    maxLines: 3,
+                                                                    decoration: new InputDecoration(
+                                                                        border: new OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              const BorderRadius.all(
+                                                                            const Radius.circular(6.0),
+                                                                          ),
+                                                                        ),
+                                                                        filled: true,
+                                                                        hintStyle: new TextStyle(color: Colors.grey[800]),
+                                                                        hintText: AppTranslations.of(context).text("enter_review_here"),
+                                                                        fillColor: Colors.white70),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      RaisedButton(
+                                                                        child:
+                                                                            Text(
+                                                                          AppTranslations.of(context)
+                                                                              .text("Submit"),
+                                                                          style:
+                                                                              TextStyle(color: Colors.white),
+                                                                        ),
+                                                                        color: Colors
+                                                                            .teal,
+                                                                        onPressed:
+                                                                            () {
+                                                                          if (reasonController
+                                                                              .text
+                                                                              .isEmpty) {
+                                                                            SnackBar(
+                                                                                backgroundColor: Colors.red,
+                                                                                content: Text(AppTranslations.of(context).text("enter_review")));
+                                                                          } else {
+                                                                            sendReview(
+                                                                                i,
+                                                                                rating.toInt(),
+                                                                                reasonController.text);
+                                                                          }
+                                                                        },
+                                                                      ),
+                                                                      RaisedButton(
+                                                                        child:
+                                                                            Text(
+                                                                          AppTranslations.of(context)
+                                                                              .text("Cancel"),
+                                                                          style:
+                                                                              TextStyle(color: Colors.white),
+                                                                        ),
+                                                                        color: Colors
+                                                                            .teal,
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                      )
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )));
+                                              },
                                             )
-                                          ],
-                                        ),
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => new AlertDialog(
-                                                title: new Text(AppTranslations.of(context).text("Rating")),
-                                                content: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    Text(
-                                                AppTranslations.of(context).text("please_rate")),
-                                                    Padding(
-                                                      padding: EdgeInsets.all(10),
-                                                    ),
-
-                                                    SmoothStarRating(
-                                                      allowHalfRating: false,
-                                                      onRatingChanged: (v) {
-
-                                                        rating = v;
-                                                        setState(() {});
-                                                      },
-                                                      starCount: 5,
-                                                      rating: rating,
-                                                      size: 45.0,
-                                                      color: Colors.amber,
-                                                      borderColor: Colors.teal,
-                                                    ),
-
-
-                                                    Padding(
-                                                      padding: EdgeInsets.all(10),
-                                                    ),
-                                                    new TextField(
-                                                      controller: reasonController,
-                                                      maxLines: 3,
-                                                      decoration:
-                                                      new InputDecoration(
-                                                          border:
-                                                          new OutlineInputBorder(
-                                                            borderRadius:
-                                                            const BorderRadius
-                                                                .all(
-                                                              const Radius
-                                                                  .circular(
-                                                                  6.0),
-                                                            ),
-                                                          ),
-                                                          filled: true,
-                                                          hintStyle:
-                                                          new TextStyle(
-                                                              color: Colors
-                                                                  .grey[
-                                                              800]),
-                                                          hintText:
-                                                          AppTranslations.of(context).text("enter_review_here"),
-                                                          fillColor:
-                                                          Colors.white70),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.all(10),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: <Widget>[
-                                                        RaisedButton(
-                                                          child: Text(
-                                                            AppTranslations.of(context).text("Submit"),
-                                                            style: TextStyle(
-                                                                color:
-                                                                Colors.white),
-                                                          ),
-                                                          color: Colors.teal,
-                                                          onPressed: () {
-                                                            if (reasonController
-                                                                .text.isEmpty) {
-                                                              SnackBar(
-                                                                  backgroundColor:
-                                                                  Colors.red,
-                                                                  content: Text(AppTranslations.of(context).text("enter_review")));
-                                                            } else {
-                                                              sendReview(
-                                                                i,rating.toInt(),reasonController
-                                                                  .text);
-                                                            }
-                                                          },
-                                                        ),
-                                                        RaisedButton(
-                                                          child: Text(
-                                                            AppTranslations.of(context).text("Cancel"),
-                                                            style: TextStyle(
-                                                                color:
-                                                                Colors.white),
-                                                          ),
-                                                          color: Colors.teal,
-                                                          onPressed: () {
-                                                            Navigator.of(context)
-                                                                .pop();
-                                                          },
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
+                                          : Row(
+                                              children: <Widget>[
+                                                Text(AppTranslations.of(context)
+                                                    .text("Rated")),
+                                                Padding(
+                                                  padding: EdgeInsets.all(1),
                                                 ),
-                                              ));
-                                        },
-                                      ):
-                                        Row(
-                                          children: <Widget>[
-                                            Text(AppTranslations.of(context).text("Rated")),
-                                            Padding(
-                                              padding: EdgeInsets.all(1),
-                                            ),
-                                            Icon(
-                                              Icons.check_circle,
-                                              color: Colors.lightGreen,
+                                                Icon(
+                                                  Icons.check_circle,
+                                                  color: Colors.lightGreen,
+                                                )
+                                              ],
                                             )
-
-                                          ],
-
-
-                                        )
-
-
                                     ],
                                   ),
                                 ],
@@ -350,14 +373,14 @@ class historyState extends State<historyPage> {
     );
   }
 
-
   void getBookings() {
     String split;
     setState(() {
       _isLoading = true;
     });
 
-    httpGet(SERVERURL + "bookings/endbookings/${CUSTOMER.id}").then((res) async {
+    httpGet(SERVERURL + "bookings/endbookings/${CUSTOMER.id}")
+        .then((res) async {
       setState(() {
         _isLoading = false;
       });
@@ -366,25 +389,25 @@ class historyState extends State<historyPage> {
       if (resJson['result'] == 1) {
         // otp verified
         bookings = resJson['bookings'];
-        doctors=resJson['doctors'];
-        for(int i=0;i<bookings.length;i++)
-        {
-          split=bookings.elementAt(i)['created'].toString().split("T").elementAt(0);
+        doctors = resJson['doctors'];
+        for (int i = 0; i < bookings.length; i++) {
+          split = bookings
+              .elementAt(i)['created']
+              .toString()
+              .split("T")
+              .elementAt(0);
           print(split.split("-").elementAt(2));
-          int createdday,createdmonth,createdyear;
-          createdday=int.parse(split.split("-").elementAt(2));
-          createdmonth=int.parse(split.split("-").elementAt(1));
-          createdyear=int.parse(split.split("-").elementAt(0));
-          now = new DateTime(createdyear,createdmonth,createdday);
+          int createdday, createdmonth, createdyear;
+          createdday = int.parse(split.split("-").elementAt(2));
+          createdmonth = int.parse(split.split("-").elementAt(1));
+          createdyear = int.parse(split.split("-").elementAt(0));
+          now = new DateTime(createdyear, createdmonth, createdday);
           print(now);
           day.add(DateFormat('EEEE').format(now));
           date.add(DateFormat('d').format(now));
           month.add(DateFormat('MMMM').format(now));
-
-      }
-      print(day);
-
-
+        }
+        print(day);
       } else {
         //verification failed
         SnackBar(
@@ -398,23 +421,24 @@ class historyState extends State<historyPage> {
       });
       SnackBar(
           backgroundColor: Colors.red,
-          content:
-          Text(AppTranslations.of(context).text("connection_error")));
+          content: Text(AppTranslations.of(context).text("connection_error")));
     });
   }
 
-
-
-  void sendReview(int i,int rating,String review) {
+  void sendReview(int i, int rating, String review) {
     setState(() {
       _isLoading = true;
     });
 
     httpPost(
         SERVERURL + "bookings/sendReview",
-        json.encode(
-            {"bookingId": bookings.elementAt(i)['id'],"doctor_id":bookings.elementAt(i)['doctor_id'] ,"customer_id":bookings.elementAt(i)['customer_id'],"review":review, "rating": rating}))
-        .then((res) async {
+        json.encode({
+          "bookingId": bookings.elementAt(i)['id'],
+          "doctor_id": bookings.elementAt(i)['doctor_id'],
+          "customer_id": bookings.elementAt(i)['customer_id'],
+          "review": review,
+          "rating": rating
+        })).then((res) async {
       setState(() {
         _isLoading = false;
       });
@@ -423,7 +447,6 @@ class historyState extends State<historyPage> {
       if (resJson['result'] == 1) {
         Navigator.of(context).pop();
         getBookings();
-
       } else {
         //verification failed
         SnackBar(backgroundColor: Colors.red, content: Text("Error"));
@@ -435,11 +458,7 @@ class historyState extends State<historyPage> {
       });
       SnackBar(
           backgroundColor: Colors.red,
-          content:
-          Text(AppTranslations.of(context).text("connection_error")));
+          content: Text(AppTranslations.of(context).text("connection_error")));
     });
   }
-
-
-
 }

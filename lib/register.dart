@@ -113,6 +113,7 @@ class RegisterState extends State<RegisterPage> {
                       padding: EdgeInsets.all(10.0),
                     ),
                     TextField(
+                      enableInteractiveSelection: false,
                       controller: textController,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
@@ -199,6 +200,7 @@ class RegisterState extends State<RegisterPage> {
                       color: Colors.black,
                     ),
                     TextField(
+                      enableInteractiveSelection: false,
                       controller: textController,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [

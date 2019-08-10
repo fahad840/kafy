@@ -36,6 +36,14 @@ class BookingState extends State<BookingPage> {
     // TODO: implement build
     return Stack(
       children: <Widget>[
+    _isLoading
+    ? Container(
+    color: Colors.black45,
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    )
+        : Container(),
         ListView.builder(
             itemCount: bookings != null ? bookings.length : 0,
             itemBuilder: (context, i) => new Container(
@@ -160,6 +168,7 @@ class BookingState extends State<BookingPage> {
                                           padding: EdgeInsets.all(10),
                                         ),
                                         new TextField(
+                                          enableInteractiveSelection: false,
                                           controller: reasonController,
                                           maxLines: 3,
                                           textInputAction: TextInputAction.done,

@@ -29,8 +29,20 @@ class ChatState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ListView.builder(
-        itemCount: bookings!=null?
+    return
+      Stack(
+        children: <Widget>[
+
+          _isLoading
+              ? Container(
+            color: Colors.black45,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+              : Container(),
+      ListView.builder(
+      itemCount: bookings!=null?
         bookings.length:0,
         itemBuilder: (context, i) => new Column(
           children: <Widget>[
@@ -49,7 +61,7 @@ class ChatState extends State<ChatPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   new Text(
-                   doctors.elementAt(i)['name'],
+                    doctors.elementAt(i)['name'],
                     style: new TextStyle(fontWeight: FontWeight.bold),
                   ),
                   new Text(
@@ -82,7 +94,11 @@ class ChatState extends State<ChatPage> {
                 : Container()
           ],
         ),
+      )
+
+        ],
       );
+
 
   }
 

@@ -91,7 +91,7 @@ class DoctorListState extends State<DoctorList> {
         }
         setState(() {
           _filteredDoctors = _doctors;
-          if (_filteredDoctors.isEmpty) status = "No Data";
+          if (_filteredDoctors.isEmpty) status = AppTranslations.of(context).text("no_data");
         });
         _filterData.minCost = _filterParam.minCost;
         _filterData.maxCost = _filterParam.maxCost;
@@ -143,9 +143,9 @@ class DoctorListState extends State<DoctorList> {
                 for (var doctor in _doctors) {
                   if ((!_filterData.male && !_filterData.female) ||
                       (_filterData.male && _filterData.female) ||
-                      (_filterData.male == true && doctor.gender == "Male") ||
+                      (_filterData.male == true && doctor.gender == AppTranslations.of(context).text("male")) ||
                       (_filterData.female == true &&
-                          doctor.gender == "Female")) {
+                          doctor.gender == AppTranslations.of(context).text("female"))) {
                     if (_filterData.minCost <= int.parse(doctor.fee) &&
                         int.parse(doctor.fee) <= _filterData.maxCost) {
                       if (_filterData.experience <= doctor.experience) {
@@ -156,7 +156,7 @@ class DoctorListState extends State<DoctorList> {
                     }
                   }
                 }
-                if (_filteredDoctors.isEmpty) status = "No Data";
+                if (_filteredDoctors.isEmpty) status = AppTranslations.of(context).text("no_data");
               })
         ],
         title: Text(LANG == "en"
@@ -195,10 +195,10 @@ class DoctorListState extends State<DoctorList> {
             doctor.name,
             style: mainFont,
           ),
-          Text("${doctor.qualification}"),
+         // Text("${doctor.qualification}"),
           LANG == "ar"
-              ? Text("${doctor.gender} | ${doctor.experience}yrs experience")
-              : Text("${doctor.gender} | ${doctor.experience}yrs experience"),
+              ? Text("${doctor.gender=="Male"?AppTranslations.of(context).text("male"):AppTranslations.of(context).text("female")} | ${doctor.experience} "+AppTranslations.of(context).text("years_of_experience"))
+              : Text("${doctor.gender} | ${doctor.experience} "+AppTranslations.of(context).text("years_of_experience")),
 //          Text("SAR " + doctor.fee),
           Padding(
             padding: EdgeInsets.all(3.0),

@@ -114,7 +114,7 @@ class BookingState extends State<BookingPage> {
 
                                 Container(
                                   margin: EdgeInsets.only(left: 20),
-                                  child: Text(AppTranslations.of(context).text("visit_on")+ " ${bookings.elementAt(i)['created'].toString().split("T").elementAt(0)} at ${bookings.elementAt(i)['visit_time']}",textAlign: TextAlign.center,style: TextStyle(fontSize: 18)),
+                                  child: Text(AppTranslations.of(context).text("visit_on")+ " ${bookings.elementAt(i)['visit_date']} at ${bookings.elementAt(i)['visit_time']}",textAlign: TextAlign.center,style: TextStyle(fontSize: 18)),
 
                               )
 
@@ -159,7 +159,8 @@ class BookingState extends State<BookingPage> {
                                   context: context,
                                   builder: (_) => new AlertDialog(
                                     title: new Text(AppTranslations.of(context).text("Confirmation")),
-                                    content: Column(
+                                    content:SingleChildScrollView(child:
+                                    Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         Text(
@@ -221,7 +222,10 @@ class BookingState extends State<BookingPage> {
                                                           AppTranslations.of(context).text(
                                                               "enter_reason")));
                                                 } else {
-                                                  rejectBooking(
+                                                  Navigator.pop(context);
+
+                                                  _isLoading?
+                                                  null:rejectBooking(
                                                       bookings.elementAt(i)['id']
                                                           .toString(),
                                                       reasonController
@@ -237,6 +241,7 @@ class BookingState extends State<BookingPage> {
                                                     Colors.white),
                                               ),
                                               color: Colors.teal,
+
                                               onPressed: () {
                                                 Navigator.of(context)
                                                     .pop();
@@ -246,7 +251,7 @@ class BookingState extends State<BookingPage> {
                                         )
                                       ],
                                     ),
-                                  ));
+                                  )));
                             },
                             child: new Icon(
                               Icons.cancel,
@@ -319,10 +324,11 @@ class BookingState extends State<BookingPage> {
       setState(() {
         _isLoading = false;
       });
-      SnackBar(
-          backgroundColor: Colors.red,
-          content:
-          Text(AppTranslations.of(context).text("connection_error")));
+      widget._scaffoldState.currentState.showSnackBar(
+          SnackBar(backgroundColor: Colors.green, content: Text(AppTranslations.of(context).text("connection_error"))));
+
+
+
     });
   }
 
@@ -340,12 +346,9 @@ class BookingState extends State<BookingPage> {
       print(res);
       if (resJson['result'] == 1) {
 
-        Navigator.of(context).pop();
+        widget._scaffoldState.currentState.showSnackBar(
+            SnackBar(backgroundColor: Colors.green, content: Text(AppTranslations.of(context).text("cancel_success"))));
 
-        SnackBar(
-            backgroundColor: Colors.green,
-            content:
-            Text(AppTranslations.of(context).text("cancel_success")));
 
         getBookings();
       } else {

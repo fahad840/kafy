@@ -114,7 +114,8 @@ class _ReviewState extends State<Review> {
           "visit_time": _visitTime,
           "location": _cordinates,
           "totalPrice":_totalPrice,
-          "services":_servicedata
+          "services":_servicedata,
+          "visit_date":_visitDate
         })).then((res) async {
       print(res);
       var resJson = json.decode(res);
@@ -474,6 +475,7 @@ class _ReviewState extends State<Review> {
                   setState(() {
                     if (value) {
                       _changeval=value;
+                      checkboxes.removeAt(i);
                       checkboxes.insert(i, value);
                       _selectedservices.add(services[i]);
                       print("added $_selectedservices");
@@ -484,7 +486,7 @@ class _ReviewState extends State<Review> {
                       }
                     } else if(value==false){
                       _changeval=value;
-
+                      checkboxes.removeAt(i);
                       checkboxes.insert(i, value);
                       _selectedservices.remove(services[i]);
                       print("removed $_selectedservices");

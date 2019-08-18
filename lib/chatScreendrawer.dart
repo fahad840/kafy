@@ -30,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as Im;
 import 'localization/app_translations.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'home.dart';
 
 class ChatScreenDrawer extends StatefulWidget {
   Customer customer;
@@ -425,6 +426,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
 //                                                               Navigator.of(
 //                                                                       context)
 //                                                                   .pop();
+                                                              _isLoading?null:
                                                               _getLocation(
                                                                   context);
 //                                                            _mapView.show(
@@ -452,7 +454,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                                                   context: context,
                                                                   builder: (_) => new AlertDialog(
                                                                     title: new Text( AppTranslations.of(context).text("Confirmation")),
-                                                                    content: Column(
+                                                                    content: SingleChildScrollView(child:Column(
                                                                       mainAxisSize: MainAxisSize.min,
                                                                       children: <Widget>[
                                                                         Text(
@@ -464,6 +466,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                                                           enableInteractiveSelection: false,
                                                                           controller: reasonController,
                                                                           maxLines: 3,
+                                                                          textInputAction: TextInputAction.done,
                                                                           decoration:
                                                                           new InputDecoration(
                                                                               border:
@@ -513,6 +516,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                                                                           AppTranslations.of(context).text(
                                                                                               "enter_reason")));
                                                                                 } else {
+                                                                                  _isLoading?null:
                                                                                   rejectBooking(
                                                                                       widget.booking['id']
                                                                                           .toString(),
@@ -538,7 +542,7 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                                                                         )
                                                                       ],
                                                                     ),
-                                                                  ));
+                                                                  )));
 
 
                                                             },
@@ -596,6 +600,8 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
                     AppTranslations.of(context).text(
                         "book_msg"),
                     style: TextStyle(color: Colors.white),
+                    textAlign: LANG=='ar'?TextAlign.right:TextAlign.left,
+
                   ),
                 ),
               ],
@@ -625,11 +631,9 @@ class _ChatScreenDrawerState extends State<ChatScreenDrawer> {
       var resJson = json.decode(res);
       print(res);
       if (resJson['result'] == 1) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-
+        Navigator.of(context).pushAndRemoveUntil(
+            new MaterialPageRoute(builder: (BuildContext context) => Home()),
+                (Route<dynamic> route) => false);
 //        scaffoldState.currentState.showSnackBar(
 //            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
 

@@ -45,7 +45,7 @@ class DoctorProfilePageState extends State<DoctorProfilePage> {
         setState(() {
           _reviews = resJson['reviews'];
           _categories = resJson['subcategories'];
-          if (_reviews.isEmpty) status = "No Data";
+          if (_reviews.isEmpty) status = AppTranslations.of(context).text("no_data");
         });
       } else {
         //       failed
@@ -78,7 +78,7 @@ class DoctorProfilePageState extends State<DoctorProfilePage> {
         print(resJson['services']);
         setState(() {
           _services = resJson['services'];
-          if (_reviews.isEmpty) status = "No Data";
+          if (_reviews.isEmpty) status = AppTranslations.of(context).text("no_data");
         });
       } else {
         //       failed
@@ -216,12 +216,12 @@ class DoctorProfilePageState extends State<DoctorProfilePage> {
                             Expanded(
                               child: Center(
                                   child: Text(
-                                      "Exp ${widget.doctor.experience} years")),
+                                      "${widget.doctor.experience} "+AppTranslations.of(context).text("years_of_experience"))),
                               flex: 1,
                             ),
                             Expanded(
                               child: Center(
-                                  child: Text("${widget.doctor.gender}")),
+                                  child: Text("${widget.doctor.gender =="Male"?AppTranslations.of(context).text("male"):AppTranslations.of(context).text("female")}")),
                               flex: 1,
                             )
                           ],
@@ -347,7 +347,7 @@ class DoctorProfilePageState extends State<DoctorProfilePage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatScreen(
-                    doctor: widget.doctor,
+                    customer: CUSTOMER,
                     booking: resJson["booking"],
                   )),
         );

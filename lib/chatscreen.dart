@@ -5,25 +5,19 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 
 import 'package:async/async.dart';
-
 //import 'package:file/local.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:kafy/dto/doctor.dart';
-import 'package:kafy/localization.dart';
-import 'currentLocation.dart';
+import 'dto/customer.dart';
 import 'package:kafy/review.dart';
-//import 'package:kafy/review.dart';
-import 'localization/app_translations.dart';
-
-import 'package:kafy/utility.dart';
-import 'package:kafy/utility/hero_route.dart';
-import 'package:kafy/utility/platform_widget.dart';
+import 'dto/doctor.dart';
+import 'currentLocation.dart';
+import 'utility.dart';
+import 'utility/hero_route.dart';
+import 'utility/platform_widget.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as Im;
-
 //import 'package:audio_recorder2/audio_recorder2.dart';
 
 //import 'package:map_view/map_view.dart';
@@ -33,13 +27,16 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
-
-
+import 'package:image/image.dart' as Im;
+import 'localization/app_translations.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import 'home.dart';
 class ChatScreen extends StatefulWidget {
-  Doctor doctor;
-  final booking;
+  Customer customer;
+  var booking;
+  Doctor _doctor;
 
-  ChatScreen({this.doctor, this.booking});
+  ChatScreen({this.customer, this.booking});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -47,8 +44,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   static const platform = const MethodChannel('zadip.flutter.io/map');
-
-  // Doctor _doctor = Doctor.fromJson({});
+  bool _isLoading;
+//   Doctor _doctor = Doctor.fromJson({});
 // Get battery level.
   String _userLoc = 'Unknown Location.';
 
@@ -59,12 +56,14 @@ class _ChatScreenState extends State<ChatScreen> {
 //      print(result);
 //      CUSTOMER.latLng = result;
 //      location = '$result';
+      print(widget._doctor);
 //      Route route = MaterialPageRoute(
-//          builder: (_context) => Review(widget.doctor, widget.booking));
+//          builder: (_context) => Review(widget._doctor, widget.booking));
 //      Navigator.push(_context, route);
 
-    Route route=MaterialPageRoute(builder: (context)=> currentLocation(doctor: widget.doctor,booking: widget.booking,));
-    Navigator.push(_context, route);
+      Route route=MaterialPageRoute(builder: (_context)=> currentLocation(doctor: widget._doctor,booking: widget.booking,));
+      Navigator.push(_context, route);
+
 
     } on PlatformException catch (e) {
       location = "Failed to get location: '${e.message}'.";
@@ -72,6 +71,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   final TextEditingController _textController = new TextEditingController();
+  final TextEditingController reasonController = new TextEditingController();
+
   bool _isComposing = false;
   bool _isShowcase = false;
   bool isRecording = false;
@@ -90,104 +91,107 @@ class _ChatScreenState extends State<ChatScreen> {
   var compositeSubscription = new CompositeSubscription();
   var markers = [];
 
-//  Future getImage() async {
-//    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+  Future getImage() async {
+
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File compressedFile = await FlutterNativeImage.compressImage(image.path,
+        quality: 50, percentage: 20);
+
+    if (image == null) return;
+
+    int random = new Random().nextInt(100000);
+
+    var msg = {
+      'message': random,
+      'imageUrl': "uploading",
+      'audioUrl': "",
+      'receiver': widget.booking['doctor_id'], //change to doctor UID
+      'sender': true,
+      'senderPhotoUrl': widget.customer.photoUrl
+    };
+    database.reference().child('chats/${widget.booking['id']}/messages').push().set(msg);
+
+    var fileName = basename(compressedFile.path);
+
+    var downloadUrl =
+    await _upload(compressedFile, random.toString() + "." + fileName.split(".")[1]);
+    _updateImage(imageUrl: downloadUrl, messageId: random);
+  }
 //
-//    if (image == null) return;
+//  static Future<void> _resizeImage(String filePath) async {
+//    final file = File(filePath);
+//
+//    final bytes = await file.readAsBytes();
+//    print("Picture original size: ${bytes.length}");
+//
+//    final image = Im.decodeImage(bytes);
+//    final resized = Im.copyResize(image,width:60 ,height: 60);
+//    final resizedBytes = Im.encodeJpg(resized, quality: 62);
+//    print("Picture resized size: ${resizedBytes.length}");
+//
+//    await file.writeAsBytes(resizedBytes);
+//  }
+
+
+//  Future getImage() async {
+//    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+//    final tempDir = await getTemporaryDirectory();
+//    final path = tempDir.path;
+//
+//    if (imageFile == null) return;
 //
 //    int random = new Random().nextInt(100000);
+//    Im.Image image = Im.decodeImage(imageFile.readAsBytesSync());
 //
-//    var msg1 = {
+//    var compressedImage = new File('$path/img_$random.jpg')..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
+//    var msg = {
 //      'message': random,
 //      'imageUrl': "uploading",
 //      'audioUrl': "",
-//      'receiver': widget.doctor.id, //change to doctor UID
+//      'receiver': widget.booking['doctor_id'], //change to doctor UID
 //      'sender': true,
-//      'senderPhotoUrl': widget.doctor.photoUrl
+//      'senderPhotoUrl': widget.customer.photoUrl
 //    };
 //    database
 //        .reference()
 //        .child('chats/${widget.booking["id"]}/messages')
 //        .push()
-//        .set(msg1);
+//        .set(msg);
 //
-//    var fileName = basename(image.path);
+//    var fileName = basename(compressedImage.path);
 //
 //    var downloadUrl =
-//    await _upload(image, random.toString() + "." + fileName.split(".")[1]);
+//    await _upload(compressedImage, random.toString() + "." + fileName.split(".")[1]);
 //    _updateImage(imageUrl: downloadUrl, messageId: random);
 //  }
 
-  Future getImage() async {
-    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-
-
-    if (imageFile == null) return;
-
-    int random = new Random().nextInt(100000);
-    Im.Image image = Im.decodeImage(imageFile.readAsBytesSync());
-
-    var compressedImage = new File('$path/img_$random.jpg')..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
-    var msg1 = {
-      'message': random,
-      'imageUrl': "uploading",
-      'audioUrl': "",
-      'receiver': widget.doctor.id, //change to doctor UID
-      'sender': true,
-      'senderPhotoUrl': widget.doctor.photoUrl
-    };
-    database
-        .reference()
-        .child('chats/${widget.booking["id"]}/messages')
-        .push()
-        .set(msg1);
-
-    var fileName = basename(compressedImage.path);
-
-    var downloadUrl =
-        await _upload(compressedImage, random.toString() + "." + fileName.split(".")[1]);
-    _updateImage(imageUrl: downloadUrl, messageId: random);
-  }
-
-  void compressImage() async {
-    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-    int rand = new Random().nextInt(10000);
-
-    Im.Image image = Im.decodeImage(imageFile.readAsBytesSync());
-    Im.Image smallerImage = Im.copyResize(image) ;// choose the size here, it will maintain aspect ratio
-
-    var compressedImage = new File('$path/img_$rand.jpg')..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 //    _mapView = new MapView();
-    print(widget.doctor);
+    print(widget.customer);
+    getDoctor();
 
     // _initMap();
 
+
     reference = FirebaseDatabase.instance
         .reference()
-        .child('chats/${widget.booking["id"]}/messages'); //change to doctorUID
+        .child('chats/${widget.booking['id']}/messages'); //change to doctorUID
 
     reference.onChildAdded.listen(_onEntryAdded);
 
     database
         .reference()
-        .child('chats/${widget.booking["id"]}')
+        .child('chats/${widget.booking['id']}/messages')
         .once()
         .then((DataSnapshot snapshot) {
       print('Connected to chats database and read ${snapshot.value}');
     });
 
-    var msg = {'customerId': CUSTOMER.id, 'doctorId': widget.doctor.id};
-    database.reference().child('chats/${widget.booking["id"]}').update(msg);
     Duration _timerDuration = new Duration(milliseconds: 500);
 
 // Creating a new timer element.
@@ -198,6 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     _timer.reset();
   }
+
 
   _onEntryAdded(Event event) {
     print("${event.snapshot.key} ${event.snapshot.value}");
@@ -291,6 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+
 //  _onTapUp(TapUpDetails details) async {
 //    Recording recording = await AudioRecorder2.stop();
 //    print(
@@ -338,6 +344,14 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      _isLoading
+          ? Container(
+        color: Colors.black45,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      )
+          : Container(),
       new Scaffold(
         appBar: AppBar(
           title: Text(AppTranslations.of(context).text("chat")),
@@ -374,36 +388,44 @@ class _ChatScreenState extends State<ChatScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  child: ClipOval(
-                    child: FloatingActionButton(
-                        child: Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          print("working");
-                          Navigator.push(
-                              context,
-                              HeroDialogRoute(
-                                  builder: (BuildContext context) => Center(
-                                        child: AlertDialog(
-                                          contentPadding: EdgeInsets.all(0.0),
-                                          content: Container(
-                                            child: Hero(
-                                                tag: 'hero1',
-                                                child: Container(
-                                                  height: 120.0,
-                                                  width: 120.0,
-                                                  color: Colors.white,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: <Widget>[
-                                                      PlatformButton(
-                                                          context: context,
-                                                          onPressed: () {
-                                                            // Navigator.of(
-                                                            //         context)
-                                                            //     .pop();
-                                                            _getLocation(
-                                                                context);
+                  height: 100.0,
+                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        child: ClipOval(
+                          child: FloatingActionButton(
+                              child: Icon(Icons.arrow_forward),
+                              onPressed: () {
+                                print("working");
+                                Navigator.push(
+                                    context,
+                                    HeroDialogRoute(
+                                        builder: (BuildContext context) => Center(
+                                          child: AlertDialog(
+                                            contentPadding: EdgeInsets.all(10.0),
+                                            content: Container(
+                                              child: Hero(
+                                                  tag: 'hero1',
+                                                  child: Container(
+                                                    height: 120.0,
+                                                    width: 120.0,
+                                                    color: Colors.white,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                      children: <Widget>[
+                                                        PlatformButton(
+                                                            context: context,
+                                                            onPressed: () {
+
+//                                                               Navigator.of(
+//                                                                       context)
+//                                                                   .pop();
+                                                              _getLocation(
+                                                                  context);
 //                                                            _mapView.show(
 //                                                                new MapOptions(
 //                                                                    mapViewType:
@@ -419,29 +441,125 @@ class _ChatScreenState extends State<ChatScreen> {
 //                                                                  new ToolbarAction(
 //                                                                      "OK", 1)
 //                                                                ]);
-                                                          },
-                                                          child:
-                                                              Text(AppTranslations.of(context).text("book_now"))),
-                                                      PlatformButton(
-                                                          context: context,
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text(
-                                                              AppTranslations.of(context).text("Cancel Request"),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.red),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                )),
+                                                            },
+                                                            child:
+                                                            Text( AppTranslations.of(context).text("book_now"))),
+                                                        PlatformButton(
+                                                            context: context,
+                                                            onPressed: () {
+                                                              showDialog(
+                                                                  context: context,
+                                                                  builder: (_) => new AlertDialog(
+                                                                    title: new Text( AppTranslations.of(context).text("Confirmation")),
+                                                                    content:SingleChildScrollView(
+                                                                      child: Column(
+                                                                      mainAxisSize: MainAxisSize.min,
+                                                                      children: <Widget>[
+                                                                        Text(
+                                                                            AppTranslations.of(context).text("enter_reason")),
+                                                                        Padding(
+                                                                          padding: EdgeInsets.all(10),
+                                                                        ),
+                                                                        new TextField(
+                                                                          enableInteractiveSelection: false,
+                                                                          controller: reasonController,
+                                                                          maxLines: 3,
+                                                                          decoration:
+                                                                          new InputDecoration(
+                                                                              border:
+                                                                              new OutlineInputBorder(
+                                                                                borderRadius:
+                                                                                const BorderRadius
+                                                                                    .all(
+                                                                                  const Radius
+                                                                                      .circular(
+                                                                                      6.0),
+                                                                                ),
+                                                                              ),
+                                                                              filled: true,
+                                                                              hintStyle:
+                                                                              new TextStyle(
+                                                                                  color: Colors
+                                                                                      .grey[
+                                                                                  800]),
+                                                                              hintText:
+                                                                              AppTranslations.of(context).text("enter_reason_here"),
+                                                                              fillColor:
+                                                                              Colors.white70),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsets.all(10),
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                          children: <Widget>[
+                                                                            RaisedButton(
+                                                                              child: Text(
+                                                                                AppTranslations.of(context).text("Submit"),
+                                                                                style: TextStyle(
+                                                                                    color:
+                                                                                    Colors.white),
+                                                                              ),
+                                                                              color: Colors.teal,
+                                                                              onPressed: () {
+                                                                                if (reasonController
+                                                                                    .text.isEmpty) {
+                                                                                  SnackBar(
+                                                                                      backgroundColor:
+                                                                                      Colors.red,
+                                                                                      content: Text(
+                                                                                          AppTranslations.of(context).text(
+                                                                                              "enter_reason")));
+                                                                                } else {
+
+                                                                                  _isLoading?null:
+                                                                                  rejectBooking(
+                                                                                      widget.booking['id']
+                                                                                          .toString(),
+                                                                                      reasonController
+                                                                                          .text,context);
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                            RaisedButton(
+                                                                              child: Text(
+                                                                                AppTranslations.of(context).text("Cancel"),
+                                                                                style: TextStyle(
+                                                                                    color:
+                                                                                    Colors.white),
+                                                                              ),
+                                                                              color: Colors.teal,
+                                                                              onPressed: () {
+                                                                                Navigator.of(context)
+                                                                                    .pop();
+                                                                              },
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )));
+
+
+                                                            },
+                                                            child: Text(
+                                                              AppTranslations.of(context).text("Cancel"),
+                                                              style: TextStyle(
+                                                                  color:
+                                                                  Colors.red),
+                                                            ))
+                                                      ],
+                                                    ),
+                                                  )),
+                                            ),
                                           ),
-                                        ),
-                                      )));
-                        }),
+                                        )));
+                              }),
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
@@ -451,47 +569,123 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       _isShowcase
           ? GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isShowcase = false;
-                });
-              },
-              child: Container(
-                  color: Colors.black54,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                          color: Colors.transparent,
-                          height: 100.0,
-                          padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                          child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                FloatingActionButton(
-                                  onPressed: null,
-                                  child: Icon(Icons.arrow_forward),
-                                ),
-                              ])),
-                      Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          AppTranslations.of(context).text(
-                              "book_msg"),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
+        onTap: () {
+          setState(() {
+            _isShowcase = false;
+          });
+        },
+        child: Container(
+            color: Colors.black54,
+            child: Column(
+              children: <Widget>[
+                Container(
+                    color: Colors.transparent,
+                    height: 100.0,
+                    padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: null,
+                            child: Icon(Icons.arrow_forward),
+                          ),
+                        ])),
+                Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    AppTranslations.of(context).text(
+                        "book_msg"),
+                    style: TextStyle(color: Colors.white),
+                    textAlign: LANG=='ar'?TextAlign.right:TextAlign.left,
+
+                  ),
+                ),
+              ],
+            )),
+      )
           : Container(),
       isRecording
           ? Material(
-              color: Colors.transparent,
-              child: Center(child: Container(child: Text(_recordTime))))
+          color: Colors.transparent,
+          child: Center(child: Container(child: Text(_recordTime))))
           : Container()
     ]);
+
+
+
   }
+  void rejectBooking(String bookingId, String reason,BuildContext context) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    httpPost(SERVERURL + "bookings/rejectBooking",
+        json.encode({"id": bookingId, "reason": reason,"rejected_by":"User"})).then((res) async {
+      setState(() {
+        _isLoading = false;
+      });
+      var resJson = json.decode(res);
+      print(res);
+      if (resJson['result'] == 1) {
+        Navigator.of(context).pushAndRemoveUntil(
+            new MaterialPageRoute(builder: (BuildContext context) => Home()),
+                (Route<dynamic> route) => false);
+
+//        scaffoldState.currentState.showSnackBar(
+//            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
+
+//        getBookings();
+      } else {
+        //verification failed
+//        SnackBar(backgroundColor: Colors.red, content: Text("Error"));
+      }
+    }).catchError((error) {
+//    connection error
+      setState(() {
+        _isLoading = false;
+      });
+//      SnackBar(
+//          backgroundColor: Colors.red,
+//          content:
+//          Text(AppTranslations.of(context).text("connection_error")));
+    });
+  }
+
+  void sendMessagedoc(String bookingId, String name,String message) {
+
+
+    httpPost(SERVERURL + "customer/sendMessageDoc",
+        json.encode({"bookingId": bookingId, "name": name,"message":message})).then((res) async {
+
+      var resJson = json.decode(res);
+      print("message sending");
+      print(res);
+      if (resJson['result'] == 1) {
+
+//        scaffoldState.currentState.showSnackBar(
+//            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
+
+//        getBookings();
+      } else {
+        //verification failed
+//        SnackBar(backgroundColor: Colors.red, content: Text("Error"));
+      }
+    }).catchError((error) {
+//    connection error
+      setState(() {
+      });
+      print("message error");
+      print(error);
+//      SnackBar(
+//          backgroundColor: Colors.red,
+//          content:
+//          Text(AppTranslations.of(context).text("connection_error")));
+    });
+  }
+
+
+
 
   _initMap() {
 //    _mapView.onToolbarAction.listen((id) {
@@ -542,7 +736,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 onSubmitted: _handleSubmitted,
                 decoration: new InputDecoration.collapsed(
                     hintText:
-                        AppTranslations.of(context).text("send_a_message")),
+                    AppTranslations.of(context).text("send_a_message")),
               ),
             ),
             // GestureDetector(
@@ -555,59 +749,28 @@ class _ChatScreenState extends State<ChatScreen> {
                 margin: new EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? new CupertinoButton(
-                        child: new Text(AppTranslations.of(context).text('Send')),
-                        onPressed: _isComposing
-                            ? () => _handleSubmitted(_textController.text)
-                            : null,
-                      )
+                  child: new Text(AppTranslations.of(context).text('Send')),
+                  onPressed: _isComposing
+                      ? () => _handleSubmitted(_textController.text)
+                      : null,
+                )
                     : new IconButton(
-                        icon: new Icon(Icons.send),
-                        onPressed: _isComposing
-                            ? () => _handleSubmitted(_textController.text)
-                            : null,
-                      )),
+                  icon: new Icon(Icons.send),
+                  onPressed: _isComposing
+                      ? () => _handleSubmitted(_textController.text)
+                      : null,
+                )),
           ]),
           decoration: Theme.of(context).platform == TargetPlatform.iOS
               ? new BoxDecoration(
-                  border:
-                      new Border(top: new BorderSide(color: Colors.grey[200])))
+              border:
+              new Border(top: new BorderSide(color: Colors.grey[200])))
               : null),
     );
   }
 
-  void sendMessagedoc(String bookingId, String name,String message) {
-
-
-    httpPost(SERVERURL + "customer/sendMessageDoc",
-        json.encode({"bookingId": bookingId, "name": name,"message":message})).then((res) async {
-
-      var resJson = json.decode(res);
-      print("message sending");
-      print(res);
-      if (resJson['result'] == 1) {
-
-//        scaffoldState.currentState.showSnackBar(
-//            SnackBar(backgroundColor: Colors.green, content: Text("Rejected")));
-
-//        getBookings();
-      } else {
-        //verification failed
-//        SnackBar(backgroundColor: Colors.red, content: Text("Error"));
-      }
-    }).catchError((error) {
-//    connection error
-      setState(() {
-      });
-      print("message error");
-      print(error);
-//      SnackBar(
-//          backgroundColor: Colors.red,
-//          content:
-//          Text(AppTranslations.of(context).text("connection_error")));
-    });
-  }
-
   Future<Null> _handleSubmitted(String text) async {
+
     _textController.clear();
     setState(() {
       _isComposing = false;
@@ -622,15 +785,11 @@ class _ChatScreenState extends State<ChatScreen> {
       'message': text != null ? text : "",
       'imageUrl': imageUrl != null ? imageUrl : "",
       'audioUrl': audioUrl != null ? audioUrl : "",
-      'receiver': widget.doctor.id, //change to doctor UID
+      'receiver': widget.booking['doctor_id'], //change to doctor UID
       'sender': true,
-      'senderPhotoUrl': widget.doctor.photoUrl
+      'senderPhotoUrl': widget.customer.photoUrl
     };
-    database
-        .reference()
-        .child('chats/${widget.booking["id"]}/messages')
-        .push()
-        .set(msg);
+    database.reference().child('chats/${widget.booking['id']}/messages').push().set(msg);
   }
 
   void _updateImage({int messageId, String imageUrl}) {
@@ -638,9 +797,9 @@ class _ChatScreenState extends State<ChatScreen> {
       'message': "",
       'imageUrl': imageUrl != null ? imageUrl : "",
       'audioUrl': "",
-      'receiver': widget.doctor.id, //change to doctor UID
+      'receiver': widget.booking['doctor_id'], //change to doctor UID
       'sender': true,
-      'senderPhotoUrl': widget.doctor.photoUrl
+      'senderPhotoUrl': widget.customer.photoUrl
     };
 
     for (var value in _uploadingMedia) {
@@ -649,23 +808,21 @@ class _ChatScreenState extends State<ChatScreen> {
         print("${value["messageId"]}");
         database
             .reference()
-            .child('chats/${widget.booking["id"]}/${value["messageId"]}')
+            .child('chats/${widget.booking['id']}/messages/${value["messageId"]}')
             .set(msg);
         break;
       }
     }
   }
 
-
-
   void _updateAudio({int messageId, String audioUrl}) {
     var msg = {
       'message': "",
       'imageUrl': "",
       'audioUrl': audioUrl != null ? audioUrl : "",
-      'receiver': widget.doctor.id, //change to doctor UID
+      'receiver': widget.booking['doctor_id'], //change to doctor UID
       'sender': true,
-      'senderPhotoUrl': widget.doctor.photoUrl
+      'senderPhotoUrl': widget.customer.photoUrl
     };
 
     for (var value in _uploadingMedia) {
@@ -674,7 +831,7 @@ class _ChatScreenState extends State<ChatScreen> {
         print("${value["messageId"]}");
         database
             .reference()
-            .child('chats/${widget.booking["id"]}/${value["messageId"]}')
+            .child('chats/${widget.booking['id']}/${value["messageId"]}')
             .set(msg);
         break;
       }
@@ -684,14 +841,14 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<String> _upload(File imageFile, String fileName) async {
     String responseStr = "";
     var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
 
     var uri = Uri.parse(SERVERURL + "bookings/upload");
 
     var request = new http.MultipartRequest("POST", uri);
     var multipartFile =
-        new http.MultipartFile('file', stream, length, filename: fileName);
+    new http.MultipartFile('file', stream, length, filename: fileName);
     //contentType: new MediaType('image', 'png'));
 
     request.files.add(multipartFile);
@@ -709,9 +866,41 @@ class _ChatScreenState extends State<ChatScreen> {
     }).asFuture();
     return responseStr;
   }
+  void getDoctor() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    httpGet(SERVERURL + "doctors/data/${widget.booking['doctor_id']}").then((res) async {
+      setState(() {
+        _isLoading = false;
+      });
+      var resJson = json.decode(res);
+      print("doctor data ");
+      print(resJson['doctor']);
+      if (resJson['result'] == 1) {
+        // otp verified
+        widget._doctor = Doctor.fromJson(resJson['doctor']);
+        print(widget._doctor.name);
+      } else {
+        //verification failed
+//        SnackBar(
+//            backgroundColor: Colors.red,
+//            content: Text(AppTranslations.of(context).text("invalid_otp")));
+      }
+    }).catchError((error) {
+//    connection error
+      setState(() {
+        _isLoading = false;
+      });
+//      SnackBar(
+//          backgroundColor: Colors.red,
+//          content:
+//          Text(AppTranslations.of(context).text("connection_error")));
+    });
+  }
+
 }
-
-
 
 class ChatMessage extends StatelessWidget {
   ChatMessage({this.snapshot, this.animation});
@@ -731,58 +920,57 @@ class ChatMessage extends StatelessWidget {
               width: 250.0,
               alignment: LANG == "ar"
                   ? (snapshot.value['receiver'] != CUSTOMER.id
-                      ? Alignment.topLeft
-                      : Alignment.topRight)
+                  ? Alignment.topLeft
+                  : Alignment.topRight)
                   : (snapshot.value['receiver'] != CUSTOMER.id
-                      ? Alignment.topRight
-                      : Alignment.topLeft),
+                  ? Alignment.topRight
+                  : Alignment.topLeft),
               padding: EdgeInsets.all(10.0),
               margin: const EdgeInsets.only(top: 5.0),
               child: snapshot.value["audioUrl"] != ""
                   ? Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: snapshot.value["audioUrl"] == "uploading"
-                          ? CircularProgressIndicator()
-                          : IconButton(
-                              icon: Icon(Icons.play_arrow),
-                              onPressed: () {
-                                AudioPlayer advancedPlayer = new AudioPlayer();
-                                advancedPlayer.play(
-                                    FILESURL + snapshot.value["audioUrl"]);
-                              }),
-                      color: snapshot.value['receiver'] != CUSTOMER.id
-                          ? Colors.green[200]
-                          : Colors.amber[200])
+                  padding: EdgeInsets.all(10.0),
+                  child: snapshot.value["audioUrl"] == "uploading"
+                      ? CircularProgressIndicator()
+                      : IconButton(
+                      icon: Icon(Icons.play_arrow),
+                      onPressed: () {
+                        AudioPlayer advancedPlayer = new AudioPlayer();
+                        advancedPlayer.play(
+                            FILESURL + snapshot.value["audioUrl"]);
+                      }),
+                  color: Colors.green[200])
                   : (snapshot.value['imageUrl'] != ""
-                      ? Container(
-                          height: 250.0,
-                          width: 250.0,
-                          child: Stack(
-                            children: <Widget>[
-                              Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              snapshot.value['imageUrl'] != "uploading"
-                                  ? CachedNetworkImage(
-                                      height: 250.0,
-                                      width: 250.0,
-                                      imageUrl:
-                                          FILESURL + snapshot.value['imageUrl'])
-                                  : Container()
-                            ],
-                          ),
-                        )
-                      : Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(snapshot.value['message']),
-                          color: snapshot.value['receiver'] != CUSTOMER.id
-                              ? Colors.green[200]
-                              : Colors.amber[200])),
+                  ? Container(
+                height: 250.0,
+                width: 250.0,
+                child: Stack(
+                  children: <Widget>[
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    snapshot.value['imageUrl'] != "uploading"
+                        ? CachedNetworkImage(
+                        height: 250.0,
+                        width: 250.0,
+                        imageUrl:
+                        FILESURL + snapshot.value['imageUrl'])
+                        : Container()
+                  ],
+                ),
+              )
+                  : Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(snapshot.value['message']),
+                  color:snapshot.value['receiver'] != CUSTOMER.id
+                      ? Colors.green[200]
+                      : Colors.amber[200])),
             )
           ]),
     );
   }
 }
+
 
 class CompositeSubscription {
   Set<StreamSubscription> _subscriptions = new Set();
@@ -813,6 +1001,4 @@ class CompositeSubscription {
   List<StreamSubscription> toList() {
     return this._subscriptions.toList();
   }
-
-
 }

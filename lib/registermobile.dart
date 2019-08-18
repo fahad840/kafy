@@ -111,16 +111,18 @@ class RegisterState extends State<RegisterMobilePage> {
 
   Widget formUI() {
 
+     var textcontroller = new TextEditingController(text:widget.customer.phone);
     return new Column(
       children: <Widget>[
         TextFormField(
+          controller: widget.customer.phone!=null?textcontroller:null,
           enableInteractiveSelection: false,
           keyboardType: TextInputType.phone,
           inputFormatters:[
             LengthLimitingTextInputFormatter(12),
           ],
           onSaved: (String val) {
-            widget.customer.phone = val;
+            widget.customer.phone= replaceArabicNumber(val);
           },
           decoration: new InputDecoration(
 

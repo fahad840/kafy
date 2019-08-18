@@ -392,10 +392,7 @@ class historyState extends State<historyPage> {
         doctors = resJson['doctors'];
         for (int i = 0; i < bookings.length; i++) {
           split = bookings
-              .elementAt(i)['created']
-              .toString()
-              .split("T")
-              .elementAt(0);
+              .elementAt(i)['visit_date'];
           print(split.split("-").elementAt(2));
           int createdday, createdmonth, createdyear;
           createdday = int.parse(split.split("-").elementAt(2));

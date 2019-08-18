@@ -67,7 +67,7 @@
   "Submit":"Submit",
   "Cancel":"Cancel",
   "Cancel Request":"Cancel Request",
-
+  "years_of_experience": "years of experience",
   "book_now":"Book Now",
   "book_msg": "Click this to book an appointment after confirmation",
   "select_location":"Select location",
@@ -85,8 +85,9 @@
   "valid_name":"Enter Valid Name",
   "valid_email":"Enter Valid Email",
 
-  "service_cost":"Services and Cost"
+  "service_cost":"Services and Cost",
 
+  "no_data": "No Data"
 
 
 }

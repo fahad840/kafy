@@ -47,8 +47,7 @@ class currentLoctaionState extends State<currentLocation> {
     // TODO: implement initState
     print("Hello");
    // print(widget.doctor.name);
-    DOCTOR=widget.doctor;
-    BOOKING=widget.booking;
+
     _currentLocation();
 
     BitmapDescriptor.fromAssetImage(

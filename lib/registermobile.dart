@@ -29,6 +29,7 @@ class RegisterState extends State<RegisterMobilePage> {
       new GlobalKey<ScaffoldState>();
   bool _isLoading = false;
   var _locations = [];
+  String _selectedlocation;
   int _radioValue1 = -1;
 
 
@@ -174,20 +175,20 @@ class RegisterState extends State<RegisterMobilePage> {
           padding: EdgeInsets.only(top: 10, bottom: 10),
           child: DropdownButton<String>(
             isExpanded: true,
-            value: widget.customer.location,
+            value: _selectedlocation,
             hint:
             Text(AppTranslations.of(context).text("location")),
             items: _locations.map((var value) {
               return new DropdownMenuItem<String>(
                 value:
-                LANG=="en"?
-                value['name_en']:value["name_ar"],
+                value['id'].toString(),
                 child: LANG=="en"?new Text(value['name_en']):new Text(value['name_ar']),
               );
             }).toList(),
             onChanged: (String val) {
               setState(() {
                 widget.customer.location = val;
+                _selectedlocation=val;
               });
 
               print(val);

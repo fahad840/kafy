@@ -18,8 +18,8 @@ const mainFont = TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0);
 const sDisabledFont = TextStyle(fontSize: 13.0, color: disabledColor);
 
 var LANG = '';
-final String SERVERURL = "http://kafy.sa/kafy/webapi/";
-final String FILESURL = "http://kafy.sa/kafy/webapi/bookings/image/";
+final String SERVERURL = "http://192.168.8.146:8080/kafy/webapi/";
+final String FILESURL = "http://192.168.8.146:8080/kafy/webapi/bookings/image/";
 //final String SERVERURL = "http://192.168.43.101:8777/kafy/webap                                                                                                                                                                                                                                                                                                                                                                                                                                                                  i/";
 //final String FILESURL = "http://192.168.43.101:8777/static/";
 Customer CUSTOMER;

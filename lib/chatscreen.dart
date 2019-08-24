@@ -52,17 +52,14 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<Null> _getLocation(_context) async {
     String location;
     try {
-//      final String result = await platform.invokeMethod('getLocation');
-//      print(result);
-//      CUSTOMER.latLng = result;
-//      location = '$result';
-      print(widget._doctor);
-//      Route route = MaterialPageRoute(
-//          builder: (_context) => Review(widget._doctor, widget.booking));
-//      Navigator.push(_context, route);
-
-      Route route=MaterialPageRoute(builder: (_context)=> currentLocation(doctor: widget._doctor,booking: widget.booking,));
-      Navigator.push(_context, route);
+      if(DOCTOR!=null) {
+        Route route = MaterialPageRoute(builder: (_context) =>
+            currentLocation(doctor: widget._doctor, booking: widget.booking,));
+        Navigator.push(_context, route);
+      }
+      else{
+        getDoctor();
+      }
 
 
     } on PlatformException catch (e) {
@@ -880,7 +877,11 @@ class _ChatScreenState extends State<ChatScreen> {
       print(resJson['doctor']);
       if (resJson['result'] == 1) {
         // otp verified
+
         widget._doctor = Doctor.fromJson(resJson['doctor']);
+
+        DOCTOR=widget._doctor;
+        BOOKING=widget.booking;
         print(widget._doctor.name);
       } else {
         //verification failed

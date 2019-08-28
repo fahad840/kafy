@@ -66,11 +66,11 @@ class BookingState extends State<BookingPage> {
                           child:  Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              color:bookings.elementAt(i)['status']=='accpeted'? Colors.lightGreen:Colors.amber[500],
+                              color:bookings.elementAt(i)['status']=='accepted'? Colors.lightGreen:Colors.amber[500],
                               child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Text(
-                                  bookings.elementAt(i)['status']=='accpeted'?
+                                  bookings.elementAt(i)['status']=='accepted'?
                                   AppTranslations.of(context).text("booking_accepted"):AppTranslations.of(context).text("waiting_approval"),
                                   textAlign: TextAlign.end,
                                   style: TextStyle(

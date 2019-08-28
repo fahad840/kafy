@@ -317,6 +317,7 @@ class historyState extends State<historyPage> {
                                                                                 backgroundColor: Colors.red,
                                                                                 content: Text(AppTranslations.of(context).text("enter_review")));
                                                                           } else {
+                                                                            Navigator.pop(context);
                                                                             sendReview(
                                                                                 i,
                                                                                 rating.toInt(),
@@ -442,7 +443,6 @@ class historyState extends State<historyPage> {
       var resJson = json.decode(res);
       print(res);
       if (resJson['result'] == 1) {
-        Navigator.of(context).pop();
         getBookings();
       } else {
         //verification failed
